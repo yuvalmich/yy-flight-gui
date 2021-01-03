@@ -7,23 +7,6 @@
 <?import javafx.scene.layout.GridPane?>
 
 <GridPane prefHeight="614.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
-   <columnConstraints>
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
    <children>
       <Button mnemonicParsing="false" text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
