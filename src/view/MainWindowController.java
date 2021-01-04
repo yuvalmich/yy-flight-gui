@@ -11,7 +11,7 @@ import javafx.scene.control.*;
 import viewModel.MainWindowViewModel;
 
 
-public class MainWindowView implements Observer, Initializable {
+public class MainWindowController implements Observer, Initializable {
 	MainWindowViewModel viewModel;
 	
 	@FXML

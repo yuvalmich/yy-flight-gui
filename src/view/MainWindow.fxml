@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane prefHeight="614.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowView">
+<GridPane prefHeight="614.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <children>
       <Button fx:id="connectServerButton" mnemonicParsing="false" onMouseClicked="#onConnectServerButtonClicked" text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>

@@ -22,7 +22,7 @@ public class Main extends Application {
 			
 			GridPane root = (GridPane)fxl.load(getClass().getResource("MainWindow.fxml").openStream());
 			
-			MainWindowView mainWindowView = fxl.getController();
+			MainWindowController mainWindowView = fxl.getController();
 			mainWindowView.setViewModel(mainWindowViewModel);
 			mainWindowViewModel.addObserver(mainWindowView);
 			
