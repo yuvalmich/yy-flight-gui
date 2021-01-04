@@ -26,7 +26,7 @@ public class Main extends Application {
 			mainWindowView.setViewModel(mainWindowViewModel);
 			mainWindowViewModel.addObserver(mainWindowView);
 			
-			Scene scene = new Scene(root,400,400);
+			Scene scene = new Scene(root,800,800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
