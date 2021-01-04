@@ -24,7 +24,7 @@ public class MainWindowViewModel extends Observable implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if(o == this.model) {
-			result.set(this.model.getResult());
+			result.setValue(this.model.getResult());
 		}
 		
 		// usually here is where we call notifyObservers, but in this case we use data binding
