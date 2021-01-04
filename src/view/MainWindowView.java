@@ -10,6 +10,9 @@ public class MainWindowView {
 	Button connectServerButton;
 	
 	@FXML
+	Label resultLabel;
+	
+	@FXML
 	public void onConnectServerButtonClicked() {
 		
 	}
