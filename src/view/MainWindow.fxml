@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane prefHeight="614.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
+<GridPane prefHeight="614.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowView">
    <children>
-      <Button mnemonicParsing="false" text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Button fx:id="connectServerButton" mnemonicParsing="false" onMouseClicked="#onConnectServerButtonClicked" text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin></Button>
@@ -20,5 +21,13 @@
          <GridPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </GridPane.margin></Button>
+      <Label fx:id="resultLabel" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="37.0" />
+         </font>
+      </Label>
    </children>
 </GridPane>
