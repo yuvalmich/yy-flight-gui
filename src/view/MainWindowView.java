@@ -27,7 +27,7 @@ public class MainWindowView implements Observer, Initializable {
 	
 	@FXML
 	public void onConnectServerButtonClicked() {
-		
+		this.viewModel.connectToServer();
 	}
 	@Override
 	public void update(Observable o, Object arg) {
@@ -40,6 +40,5 @@ public class MainWindowView implements Observer, Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		resultLabel = new Label();
 	}
 }
