@@ -20,7 +20,7 @@ public class Main extends Application {
 			
 			FXMLLoader fxl = new FXMLLoader();
 			
-			GridPane root = (GridPane)fxl.load(getClass().getResource("MainWindow.fxml").openStream());
+			GridPane root = (GridPane)fxl.load(getClass().getResource("MainWindowView.fxml").openStream());
 			
 			MainWindowController mainWindowView = fxl.getController();
 			mainWindowView.setViewModel(mainWindowViewModel);
