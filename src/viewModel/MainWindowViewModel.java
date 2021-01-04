@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringPropertyBase;
+import model.MainWindowModel;
 
 public class MainWindowViewModel extends Observable implements Observer {
 	MainWindowModel model;
@@ -16,8 +17,8 @@ public class MainWindowViewModel extends Observable implements Observer {
 		result = new SimpleStringProperty();
 	}
 	
-	public void plus(){
-		m.plus(Double.parseDouble(x.get()), Double.parseDouble(y.get()));
+	public void connectToServer(){
+		this.model.connectToServer();
 	}
 	
 	@Override
