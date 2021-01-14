@@ -7,16 +7,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import javafx.util.Pair;
 import viewModel.MainWindowViewModel;
 
 
@@ -34,6 +39,8 @@ public class MainWindowController implements Observer, Initializable {
 	
 	public void setViewModel(MainWindowViewModel vm) {
 		this.viewModel = vm;
+		
+		this.GridCanvas.solution.bind(vm.solution);
 	}
 	
 	@FXML
@@ -43,7 +50,52 @@ public class MainWindowController implements Observer, Initializable {
 	
 	@FXML
 	public void onCalculatePathButtonClicked() {
-		System.out.println("Load data button clicked");
+		if (!viewModel.isConnectedToSolver()) {
+			Dialog<Pair<String, String>> dialog = new Dialog<>();
+			dialog.setTitle("Solver Server connection");
+			dialog.setHeaderText("Please insert the ip and port of Solver server");
+
+			ButtonType loginButtonType = new ButtonType("Connect and solve", ButtonData.OK_DONE);
+			dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+			GridPane grid = new GridPane();
+			grid.setHgap(10);
+			grid.setVgap(10);
+
+			TextField ip = new TextField();
+			ip.setPromptText("IP");
+			TextField port = new TextField();
+			port.setPromptText("port");
+
+			grid.add(new Label("IP:"), 0, 0);
+			grid.add(ip, 1, 0);
+			grid.add(new Label("Port:"), 0, 1);
+			grid.add(port, 1, 1);
+
+			dialog.getDialogPane().setContent(grid);
+			Platform.runLater(() -> ip.requestFocus());
+
+			dialog.setResultConverter(dialogButton -> {
+				if (dialogButton == loginButtonType)
+					return new Pair<>(ip.getText(), port.getText());
+				return null;
+			});
+			Optional<Pair<String, String>> result = dialog.showAndWait();
+
+			result.ifPresent(serverInfo -> {
+				viewModel.connectToSolver(serverInfo.getKey(), Integer.parseInt(serverInfo.getValue()));
+			});
+			
+			if(!result.isPresent()) return;
+		}
+
+		// if already connected.
+		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
+		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
+		int destinationXcord =  (int) (GridCanvas.destinationXcord.get() / GridCanvas.recSizeWidth());
+		int destinationYcord = (int) (GridCanvas.destinationYcord.get()/ GridCanvas.recSizeHeight());
+		viewModel.solveProblem(GridCanvas.mapData, GridCanvas.startXcord, GridCanvas.startYcord, destinationXcord, destinationYcord);
+		this.GridCanvas.redraw();
 	}
 	
 	@FXML
@@ -58,7 +110,7 @@ public class MainWindowController implements Observer, Initializable {
 			return;
 		}
 		
-		// TODO: continue refactor from here
+		// TODO: continue refactor from here (separate to functions)
 		List<String> list = new LinkedList<String>();
 		Scanner scanner = null;
 		try {
