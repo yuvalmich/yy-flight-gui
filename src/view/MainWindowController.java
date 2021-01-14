@@ -18,11 +18,10 @@ public class MainWindowController implements Observer, Initializable {
 	Button connectServerButton;
 	
 	@FXML
-	Label resultLabel;
+	MapGrid GridCanvas;
 	
 	public void setViewModel(MainWindowViewModel vm) {
 		this.viewModel = vm;
-		resultLabel.textProperty().bind(vm.result);
 	}
 	
 	@FXML

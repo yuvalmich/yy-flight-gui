@@ -14,7 +14,7 @@ public class MainWindowViewModel extends Observable implements Observer {
 	
 	public MainWindowViewModel(MainWindowModel model) {
 		this.model = model;
-		result = new SimpleStringProperty();
+		
 	}
 	
 	public void connectToServer(){
@@ -24,7 +24,7 @@ public class MainWindowViewModel extends Observable implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if(o == this.model) {
-			result.setValue(this.model.getResult());
+			
 		}
 		
 		// usually here is where we call notifyObservers, but in this case we use data binding
