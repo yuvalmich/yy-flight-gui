@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane prefHeight="614.0" prefWidth="591.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
+<?import view.MapGrid?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <children>
-      <Button fx:id="connectServerButton" mnemonicParsing="false" onMouseClicked="#onConnectServerButtonClicked" text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </GridPane.margin></Button>
-      <Button mnemonicParsing="false" text="Load data" GridPane.columnIndex="3" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </GridPane.margin></Button>
-      <Button mnemonicParsing="false" text="Calculate path" GridPane.columnIndex="4" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </GridPane.margin></Button>
-      <Label fx:id="resultLabel" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="3">
-         <GridPane.margin>
-            <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
-         </GridPane.margin>
-         <font>
-            <Font size="37.0" />
-         </font>
-      </Label>
+      <HBox spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <VBox spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Button fx:id="connectServerButton" mnemonicParsing="false" onAction="#onConnectServerButtonClicked" text="Connect">
+                        </Button>
+                        <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#onLoadDataButtonClicked" text="Load data" />
+                        <Button fx:id="calculatePathButton" mnemonicParsing="false" onAction="#onCalculatePathButtonClicked" text="Calculate path" HBox.hgrow="NEVER"/>
+                     </children>
+                  </HBox>
+                  <MapGrid fx:id="GridCanvas" height="600.0" width="600.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </children>
-</GridPane>
+</AnchorPane>
