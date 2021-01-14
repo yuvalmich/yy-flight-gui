@@ -3,6 +3,8 @@ package viewModel;
 import java.util.Observable;
 import java.util.Observer;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringPropertyBase;
 import model.MainWindowModel;
@@ -10,11 +12,13 @@ import model.MainWindowModel;
 public class MainWindowViewModel extends Observable implements Observer {
 	MainWindowModel model;
 
-	public StringPropertyBase result;
+	public DoubleProperty planeLatCord, planeLongCord;
 	
 	public MainWindowViewModel(MainWindowModel model) {
 		this.model = model;
 		
+		planeLatCord = new SimpleDoubleProperty();
+		planeLongCord = new SimpleDoubleProperty();
 	}
 	
 	public void connectToServer(){
