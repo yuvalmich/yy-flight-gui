@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import model.MainWindowModel;
 import viewModel.MainWindowViewModel;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.fxml.FXMLLoader;
 
@@ -20,13 +21,13 @@ public class Main extends Application {
 			
 			FXMLLoader fxl = new FXMLLoader();
 			
-			GridPane root = (GridPane)fxl.load(getClass().getResource("MainWindowView.fxml").openStream());
+			AnchorPane root = fxl.load(getClass().getResource("MainWindowView.fxml").openStream());
 			
 			MainWindowController mainWindowView = fxl.getController();
 			mainWindowView.setViewModel(mainWindowViewModel);
 			mainWindowViewModel.addObserver(mainWindowView);
 			
-			Scene scene = new Scene(root,800,800);
+			Scene scene = new Scene(root, 900, 700);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
