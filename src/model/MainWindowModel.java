@@ -36,6 +36,26 @@ public class MainWindowModel extends Observable {
 		passSolution(sol);
 	}
 	
+	public void interpretText(String code) {
+		// TODO: implement
+	}
+	
+	public boolean interpreterBusy()
+	{
+		// TODO: implement
+		return false;
+	}
+	
+	public void stop()
+	{
+		// TODO: implement
+	}
+	
+	public void updateIntepreter(boolean state)
+	{
+		// TODO: implement
+	}
+	
 	  ///////////////////////
 	 /// Private Methods ///
 	///////////////////////

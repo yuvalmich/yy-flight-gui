@@ -30,6 +30,17 @@
                   <MapGrid fx:id="GridCanvas" height="600.0" width="600.0" />
                </children>
             </VBox>
+            <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="NEVER">
+               <children>
+                  <RadioButton fx:id="AutoPilotButton" mnemonicParsing="false" text="AutoPilot" VBox.vgrow="NEVER" />
+                  <TextArea fx:id="CommandLineTextArea" prefHeight="500.0" prefWidth="400.0" promptText="write your commands" VBox.vgrow="NEVER">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></TextArea>
+                  <Button fx:id="ExecuteButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#ExecutePressed" text="execute" VBox.vgrow="NEVER" />
+                  <TextArea fx:id="PrintTextArea" prefHeight="500.0" prefWidth="400.0" promptText="output section"  editable="false" />
+               </children>
+            </VBox>
          </children>
       </HBox>
    </children>

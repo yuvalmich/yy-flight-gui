@@ -35,12 +35,36 @@ public class MainWindowController implements Observer, Initializable {
 	@FXML
 	Button calculatePathButton;
 	@FXML
+	Button ExecuteButton;
+	@FXML
 	MapGrid GridCanvas;
+	@FXML
+	RadioButton AutoPilotButton;
+	@FXML
+	TextArea CommandLineTextArea;
+	@FXML
+	TextArea PrintTextArea;
 	
 	public void setViewModel(MainWindowViewModel vm) {
 		this.viewModel = vm;
 		
-		this.GridCanvas.solution.bind(vm.solution);
+		this.GridCanvas.solution.bind(viewModel.solution);
+		this.viewModel.commandLineText.bind(CommandLineTextArea.textProperty());
+		
+		PrintTextArea.textProperty().addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				PrintTextArea.setScrollTop(Double.MAX_VALUE); // this will scroll to the bottom
+				// use Double.MIN_VALUE to scroll to the top
+			}
+		});
+		
+		viewModel.printAreaText.addListener(new ChangeListener<String>() {
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				PrintTextArea.textProperty().set(newValue);
+				PrintTextArea.appendText("");
+			}
+		});
 	}
 	
 	@FXML
@@ -175,6 +199,17 @@ public class MainWindowController implements Observer, Initializable {
 			}});
 	}
 	
+	@FXML
+	public void ExecutePressed() {
+		if (!AutoPilotButton.isSelected())
+			return;
+		if (viewModel.interpreterBusy())
+			viewModel.stop();
+ 	    // takes down the current thread and allows another new context of interpretation to run.
+		viewModel.printAreaText.set("");
+		viewModel.interpretText();
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
@@ -186,5 +221,13 @@ public class MainWindowController implements Observer, Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		PrintTextArea.setEditable(false);
+		
+		AutoPilotButton.setOnAction((e) -> {
+			viewModel.updateInterpreter(true);
+		});
+		
+		ToggleGroup buttonGroup = new ToggleGroup();
+		AutoPilotButton.setToggleGroup(buttonGroup);
 	}
 }

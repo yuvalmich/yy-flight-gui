@@ -15,6 +15,7 @@ public class MainWindowViewModel extends Observable implements Observer {
 	MainWindowModel model;
 	
 	public StringProperty solution;
+	public StringProperty commandLineText, printAreaText;
 	public DoubleProperty planeLatCord, planeLongCord;
 	
 	public MainWindowViewModel(MainWindowModel model) {
@@ -23,6 +24,9 @@ public class MainWindowViewModel extends Observable implements Observer {
 		planeLatCord = new SimpleDoubleProperty();
 		planeLongCord = new SimpleDoubleProperty();
 		solution = new SimpleStringProperty("");
+		
+		commandLineText = new SimpleStringProperty();
+		printAreaText = new SimpleStringProperty();
 	}
 	
 	public void connectToServer(){
@@ -42,6 +46,25 @@ public class MainWindowViewModel extends Observable implements Observer {
 	{
 		model.solveProblem(mapGrid,currentX,currentY,xDest, yDest);	
 	}
+	
+	public void interpretText() {
+		model.interpretText(this.commandLineText.get());
+	}
+	
+	public boolean interpreterBusy()
+	{
+		return model.interpreterBusy();
+	}
+	
+	public void updateInterpreter(boolean state)
+	{
+		model.updateIntepreter(state);
+	}
+	
+	public void stop()
+	{
+		model.stop();
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
@@ -55,6 +78,11 @@ public class MainWindowViewModel extends Observable implements Observer {
 	       case("gotSolution"):
 	    	   this.solution.set(value);  
 	    	   break;
+	       case("print"):
+	    	   String existing_print=this.printAreaText.get();
+	           if(existing_print==null) existing_print="";
+	    	   this.printAreaText.set(existing_print+value+"\n");
+	         break;
        }
 	}
 }
