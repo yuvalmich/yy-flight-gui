@@ -75,6 +75,9 @@ public class MainWindowController implements Observer, Initializable {
 
 			dialog.getDialogPane().setContent(grid);
 			Platform.runLater(() -> ip.requestFocus());
+			
+			ip.setText("127.0.0.1");
+			port.setText("9000");
 
 			dialog.setResultConverter(dialogButton -> {
 				if (dialogButton == loginButtonType)
