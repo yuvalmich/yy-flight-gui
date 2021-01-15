@@ -1,4 +1,4 @@
-package model.pathSolver;
+package model.solverServerHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,9 +7,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import model.Model;
 
-public class PathSolver {
+public class SolverServerHandler {
 	public static Socket connection;
+	Model m=Model.getInstance();
 
 	public void connect(String ip, int port) {
 		try {
