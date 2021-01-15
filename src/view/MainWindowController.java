@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
@@ -98,6 +99,9 @@ public class MainWindowController implements Observer, Initializable {
 
 			dialog.getDialogPane().setContent(grid);
 			Platform.runLater(() -> ip.requestFocus());
+			
+			ip.setText("127.0.0.1");
+			port.setText("9000");
 
 			dialog.setResultConverter(dialogButton -> {
 				if (dialogButton == loginButtonType)
@@ -114,8 +118,13 @@ public class MainWindowController implements Observer, Initializable {
 		}
 
 		// if already connected.
-		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
-		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
+//		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
+//		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
+		
+		// TODO: after connect to server change it to real position
+		this.GridCanvas.startXcord = 100;
+		this.GridCanvas.startYcord = 100;
+		
 		int destinationXcord =  (int) (GridCanvas.destinationXcord.get() / GridCanvas.recSizeWidth());
 		int destinationYcord = (int) (GridCanvas.destinationYcord.get()/ GridCanvas.recSizeHeight());
 		viewModel.solveProblem(GridCanvas.mapData, GridCanvas.startXcord, GridCanvas.startYcord, destinationXcord, destinationYcord);
@@ -178,19 +187,19 @@ public class MainWindowController implements Observer, Initializable {
 		GridCanvas.setOnMouseClicked((e) -> {
 			GridCanvas.destinationXcord.set(e.getX());
 			GridCanvas.destinationYcord.set(e.getY());
-			GridCanvas.redraw();
+			recalculateOrUpdate();
 		});
 
 		// whenever positions change, redraw the map.
 		GridCanvas.planeXcord.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				GridCanvas.redraw();
+				recalculateOrUpdate();
 			}});
 		GridCanvas.planeYcord.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				GridCanvas.redraw();
+				recalculateOrUpdate();
 			}});
 		GridCanvas.heading.addListener(new ChangeListener<Object>() {
 			@Override
@@ -208,7 +217,7 @@ public class MainWindowController implements Observer, Initializable {
  	    // takes down the current thread and allows another new context of interpretation to run.
 		viewModel.printAreaText.set("");
 		viewModel.interpretText();
-	}
+	}	
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -229,5 +238,23 @@ public class MainWindowController implements Observer, Initializable {
 		
 		ToggleGroup buttonGroup = new ToggleGroup();
 		AutoPilotButton.setToggleGroup(buttonGroup);
+
+		File planeImageFile = new File("assets/airplane-icon.png");
+		Image planeImage = new Image("file:" + planeImageFile.toURI().getPath());
+		File destinationImageFile = new File("assets/destination-icon.png");
+		Image destinationImage = new Image("file:" + destinationImageFile.toURI().getPath());
+		File arrowImageFile = new File("assets/arrow-icon.png");
+		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
+		
+		GridCanvas.setImages(planeImage, destinationImage, arrowImage);
 	}
+	
+	private void recalculateOrUpdate() {
+		if (viewModel.isConnectedToSolver()) {
+			this.onCalculatePathButtonClicked();
+		} else {
+			GridCanvas.redraw();
+		}
+	}
+	
 }
