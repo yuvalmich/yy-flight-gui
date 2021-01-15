@@ -208,16 +208,13 @@ public class MainWindowController implements Observer, Initializable {
 			}});
 	}
 	
-	@FXML
-	public void ExecutePressed() {
-		if (!AutoPilotButton.isSelected())
-			return;
-		if (viewModel.interpreterBusy())
-			viewModel.stop();
- 	    // takes down the current thread and allows another new context of interpretation to run.
-		viewModel.printAreaText.set("");
-		viewModel.interpretText();
-	}	
+	private void recalculateOrUpdate() {
+		if (viewModel.isConnectedToSolver()) {
+			this.onCalculatePathButtonClicked();
+		} else {
+			GridCanvas.redraw();
+		}
+	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -230,15 +227,6 @@ public class MainWindowController implements Observer, Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		PrintTextArea.setEditable(false);
-		
-		AutoPilotButton.setOnAction((e) -> {
-			viewModel.updateInterpreter(true);
-		});
-		
-		ToggleGroup buttonGroup = new ToggleGroup();
-		AutoPilotButton.setToggleGroup(buttonGroup);
-
 		File planeImageFile = new File("assets/airplane-icon.png");
 		Image planeImage = new Image("file:" + planeImageFile.toURI().getPath());
 		File destinationImageFile = new File("assets/destination-icon.png");
