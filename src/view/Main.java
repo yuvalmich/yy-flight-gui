@@ -1,12 +1,11 @@
 package view;
-
+	
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.MainWindowModel;
-import viewModel.MainWindowViewModel;
+import model.Model;
+import viewModel.ViewModel;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.fxml.FXMLLoader;
 
 
@@ -14,20 +13,15 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			// Create main-window model and viewModel
-			MainWindowModel mainWindowModel = new MainWindowModel(); // Model
-			MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(mainWindowModel); // View-Model
-			mainWindowModel.addObserver(mainWindowViewModel);
-			
-			FXMLLoader fxl = new FXMLLoader();
-			
-			AnchorPane root = fxl.load(getClass().getResource("MainWindowView.fxml").openStream());
-			
-			MainWindowController mainWindowView = fxl.getController();
-			mainWindowView.setViewModel(mainWindowViewModel);
-			mainWindowViewModel.addObserver(mainWindowView);
-			
-			Scene scene = new Scene(root, 900, 700);
+			Model m = Model.getInstance();
+			ViewModel vm = new ViewModel(m);
+			FXMLLoader fxl=new FXMLLoader();
+			AnchorPane root= fxl.load(getClass().getResource("View.fxml").openStream());
+			View v=fxl.getController(); // View
+			v.setViewModel(vm);
+			vm.addObserver(v);
+			m.addObserver(vm);
+			Scene scene = new Scene(root,1400,650);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -35,7 +29,7 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
