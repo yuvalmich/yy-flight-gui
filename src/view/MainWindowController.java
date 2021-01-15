@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
@@ -90,8 +91,13 @@ public class MainWindowController implements Observer, Initializable {
 		}
 
 		// if already connected.
-		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
-		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
+//		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
+//		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
+		
+		// TODO: after connect to server change it to real position
+		this.GridCanvas.startXcord = 100;
+		this.GridCanvas.startYcord = 100;
+		
 		int destinationXcord =  (int) (GridCanvas.destinationXcord.get() / GridCanvas.recSizeWidth());
 		int destinationYcord = (int) (GridCanvas.destinationYcord.get()/ GridCanvas.recSizeHeight());
 		viewModel.solveProblem(GridCanvas.mapData, GridCanvas.startXcord, GridCanvas.startYcord, destinationXcord, destinationYcord);
@@ -186,5 +192,13 @@ public class MainWindowController implements Observer, Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		File planeImageFile = new File("assets/airplane-icon.png");
+		Image planeImage = new Image("file:" + planeImageFile.toURI().getPath());
+		File destinationImageFile = new File("assets/destination-icon.png");
+		Image destinationImage = new Image("file:" + destinationImageFile.toURI().getPath());
+		File arrowImageFile = new File("assets/arrow-icon.png");
+		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
+		
+		GridCanvas.setImages(planeImage, destinationImage, arrowImage);
 	}
 }
