@@ -160,25 +160,33 @@ public class MainWindowController implements Observer, Initializable {
 		GridCanvas.setOnMouseClicked((e) -> {
 			GridCanvas.destinationXcord.set(e.getX());
 			GridCanvas.destinationYcord.set(e.getY());
-			GridCanvas.redraw();
+			recalculateOrUpdate();
 		});
 
 		// whenever positions change, redraw the map.
 		GridCanvas.planeXcord.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				GridCanvas.redraw();
+				recalculateOrUpdate();
 			}});
 		GridCanvas.planeYcord.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				GridCanvas.redraw();
+				recalculateOrUpdate();
 			}});
 		GridCanvas.heading.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				GridCanvas.redraw();
 			}});
+	}
+	
+	private void recalculateOrUpdate() {
+		if (viewModel.isConnectedToSolver()) {
+			this.onCalculatePathButtonClicked();
+		} else {
+			GridCanvas.redraw();
+		}
 	}
 	
 	@Override
