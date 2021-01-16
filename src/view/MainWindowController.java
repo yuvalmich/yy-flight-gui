@@ -171,18 +171,18 @@ public class MainWindowController implements Initializable, Observer {
 				}
 			}
 		}
-		mapGridCanvas.setMapData(mapData, area, startLat, startLong);
+		mapGridCanvas.setMapHeights(mapData, area, startLat, startLong);
 		
-		this.mapGridCanvas.planeYcord.bind(Bindings.createDoubleBinding(
-				() -> ((110.54 * (mapGridCanvas.initialLat - viewModel.planeLat.get()) 
+		this.mapGridCanvas.airplane_Y.bind(Bindings.createDoubleBinding(
+				() -> ((110.54 * (mapGridCanvas.initial_Lat - viewModel.planeLat.get()) 
 						/ Math.sqrt(mapGridCanvas.area)) * mapGridCanvas.recSizeHeight()),viewModel.planeLat));
-		this.mapGridCanvas.planeXcord.bind(Bindings.createDoubleBinding(
-				() -> ((111.320 *(viewModel.planeLong.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLat.get())))
+		this.mapGridCanvas.airplane_X.bind(Bindings.createDoubleBinding(
+				() -> ((111.320 *(viewModel.planeLong.get() - mapGridCanvas.initial_Long) * Math.cos(Math.toRadians(mapGridCanvas.initial_Lat - viewModel.planeLat.get())))
 						/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLong));
 		
 		mapGridCanvas.setOnMouseClicked((e) -> {
-			mapGridCanvas.destinationXcord.set(e.getX());
-			mapGridCanvas.destinationYcord.set(e.getY());
+			mapGridCanvas.dest_X.set(e.getX());
+			mapGridCanvas.dest_Y.set(e.getY());
 			
 			recalculateOrRedraw();
 		});
@@ -193,12 +193,12 @@ public class MainWindowController implements Initializable, Observer {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				mapGridCanvas.redraw();
 			}});
-		mapGridCanvas.planeXcord.addListener(new ChangeListener<Object>() {
+		mapGridCanvas.airplane_X.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				recalculateOrRedraw();
 			}});
-		mapGridCanvas.planeYcord.addListener(new ChangeListener<Object>() {
+		mapGridCanvas.airplane_Y.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				recalculateOrRedraw();
@@ -250,20 +250,20 @@ public class MainWindowController implements Initializable, Observer {
 			if(!result.isPresent()) return;
 		}
 
-		this.mapGridCanvas.startXcord = (int) (mapGridCanvas.planeXcord.get()/mapGridCanvas.recSizeWidth());
-		this.mapGridCanvas.startYcord = (int) (mapGridCanvas.planeYcord.get()/mapGridCanvas.recSizeHeight());
+		this.mapGridCanvas.initial_X = (int) (mapGridCanvas.airplane_X.get()/mapGridCanvas.recSizeWidth());
+		this.mapGridCanvas.initial_Y = (int) (mapGridCanvas.airplane_Y.get()/mapGridCanvas.recSizeHeight());
 		
-		int destinationXcord =  (int) (mapGridCanvas.destinationXcord.get() / mapGridCanvas.recSizeWidth());
-		int destinationYcord = (int) (mapGridCanvas.destinationYcord.get()/ mapGridCanvas.recSizeHeight());
-		viewModel.solveProblem(mapGridCanvas.mapData,mapGridCanvas.startXcord, mapGridCanvas.startYcord,destinationXcord, destinationYcord);
+		int destinationXcord =  (int) (mapGridCanvas.dest_X.get() / mapGridCanvas.recSizeWidth());
+		int destinationYcord = (int) (mapGridCanvas.dest_Y.get()/ mapGridCanvas.recSizeHeight());
+		viewModel.solveProblem(mapGridCanvas.mapHeights,mapGridCanvas.initial_X, mapGridCanvas.initial_Y,destinationXcord, destinationYcord);
 		this.mapGridCanvas.redraw();
 	}
 	
 	private void recalculateOrRedraw() {
 		if (viewModel.isConnectedToSolver()) {
-			int destinationXcord =  (int) (mapGridCanvas.destinationXcord.get() / mapGridCanvas.recSizeWidth());
-			int destinationYcord = (int) (mapGridCanvas.destinationYcord.get()/ mapGridCanvas.recSizeHeight());
-			viewModel.solveProblem(mapGridCanvas.mapData,mapGridCanvas.startXcord, mapGridCanvas.startYcord,destinationXcord, destinationYcord);	
+			int destinationXcord =  (int) (mapGridCanvas.dest_X.get() / mapGridCanvas.recSizeWidth());
+			int destinationYcord = (int) (mapGridCanvas.dest_Y.get()/ mapGridCanvas.recSizeHeight());
+			viewModel.solveProblem(mapGridCanvas.mapHeights,mapGridCanvas.initial_X, mapGridCanvas.initial_Y,destinationXcord, destinationYcord);	
 		}
 		mapGridCanvas.redraw();
 	}
@@ -331,7 +331,7 @@ public class MainWindowController implements Initializable, Observer {
 		File arrowImageFile = new File("assets/arrow.png");
 		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
 		
-		mapGridCanvas.setImages(planeImage, destinationImage, arrowImage);
+		mapGridCanvas.initIcons(planeImage, destinationImage, arrowImage);
  		
 		ToggleGroup buttonGroup = new ToggleGroup();
 		autoPilotModeButton.setToggleGroup(buttonGroup);

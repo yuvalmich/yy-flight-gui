@@ -13,55 +13,58 @@ import javafx.scene.paint.Paint;
 
 public class MapGrid extends Canvas {
 
-	public int[][] mapData;
+	public int[][] mapHeights;
 	double area;
-	Image planeImage;
-	Image destinationImage;
-	Image arrowImage;
-	Image gridSnapshot;
-	public int startXcord;
-	public int startYcord;
-	public double initialLat;
-	public double initialLong;
-	public  DoubleProperty destinationXcord, destinationYcord;
-	public DoubleProperty planeXcord, planeYcord;
-	public DoubleProperty heading;
 	public StringProperty solution;
 	public BooleanProperty serverUp;
-
+	public int initial_X;
+	public int initial_Y;
+	public double initial_Lat;
+	public double initial_Long;
+	public DoubleProperty dest_X, dest_Y;
+	public DoubleProperty airplane_X, airplane_Y;
+	public DoubleProperty heading;
+	
+	private Image airplaneIcon;
+	private Image destIcon;
+	private Image routeIcon;
+	private Image gridSnapshot;
 	
 	public MapGrid() {
-		this.planeXcord = new SimpleDoubleProperty();
-		this.planeYcord = new SimpleDoubleProperty();
+		this.airplane_X = new SimpleDoubleProperty();
+		this.airplane_Y = new SimpleDoubleProperty();
 		this.heading=new SimpleDoubleProperty();		
-		this.destinationXcord = new SimpleDoubleProperty();//TODO: make the conversion on the model side so we wont have to mess with it here. 
-		this.destinationYcord = new SimpleDoubleProperty();
+		this.dest_X = new SimpleDoubleProperty(); 
+		this.dest_Y = new SimpleDoubleProperty();
 		this.solution = new SimpleStringProperty();
 		this.serverUp = new SimpleBooleanProperty();
 		
 	}
-	public void setImages(Image planeImage, Image destinationImage, Image arrowImage) {
-		this.planeImage = planeImage;
-		this.destinationImage = destinationImage;
-		this.arrowImage = arrowImage;
+	
+	public double recSizeHeight() {return this.getHeight()  / this.mapHeights.length;}
+	public double recSizeWidth() { return this.getWidth()  / this.mapHeights[0].length;}
+	
+	public void initIcons(Image planeImage, Image destImage, Image routeImage) {
+		this.airplaneIcon = planeImage;
+		this.destIcon = destImage;
+		this.routeIcon = routeImage;
 	}
 	
-	
-	public double recSizeHeight() {return this.getHeight()  / this.mapData.length;}
-	public double recSizeWidth() { return this.getWidth()  / this.mapData[0].length;}
-	
-	public void setMapData(int[][] mapData, double area,double initialLat,double initialLong) {
-		this.mapData = mapData;
-		this.initialLat=initialLat;
-		this.initialLong=initialLong;
+	public void setMapHeights(int[][] mapHeights, double area,double initialLat,double initialLong) {
+		this.mapHeights = mapHeights;
+		this.initial_Lat=initialLat;
+		this.initial_Long=initialLong;
 		this.area = area;
+		
 		redraw();
 	}
-	private double calcColorScale() {
-		int max = 0;// finding max height to define our heights scale.
-		for (int i = 0; i < mapData.length; i++) {
-			for (int j = 0; j < mapData[0].length; j++) {
-				int value = mapData[i][j];
+	
+	// find max height to define our heights scale.
+	private double initColorScale() {
+		int max = 0;
+		for (int i = 0; i < mapHeights.length; i++) {
+			for (int j = 0; j < mapHeights[0].length; j++) {
+				int value = mapHeights[i][j];
 				if (value > max) {
 					max = value;
 				}
@@ -70,21 +73,22 @@ public class MapGrid extends Canvas {
 		return ((double) max / 255);
 	}
 
-	// normalizes cell color given the scale range and the cell height.
-	private String calcCellColor(int height, double scale) {
-		int normalized = (int) (height / scale);
-		String red = Integer.toHexString(255 - normalized);
-		String green = Integer.toHexString(normalized);
+	// normalize cell color.
+	private String scaleCellColor(int height, double scale) {
+		int scaledVal = (int) (height / scale);
+		String red = Integer.toHexString(255 - scaledVal);
+		String green = Integer.toHexString(scaledVal);
+		
 		if (red.length() < 2)
 			red = "0" + red;
+		
 		if (green.length() < 2)
 			green = "0" + green;
 
-		String color = "#" + red + green + "00";
-		return color;
+		return "#" + red + green + "00";
 	}
 	
-	public void drawImage(GraphicsContext gc, Image im, double x, double y ,double w ,double h ,double d) {
+	public void drawIcon(GraphicsContext gc, Image im, double x, double y ,double w ,double h ,double d) {
 		gc.save();
 		gc.translate(x, y);	
 		gc.rotate(d);
@@ -94,77 +98,81 @@ public class MapGrid extends Canvas {
 	}
 	 
 	public void redraw() {
-		if (mapData != null) {
+		if (mapHeights != null) {
 			GraphicsContext gc = getGraphicsContext2D();
-			//clearing the whole canvas
+			
 			double w = this.recSizeWidth();
 			double h = this.recSizeHeight();
+			
 			gc.clearRect(0, 0, this.getWidth(), this.getHeight());
-				if(gridSnapshot == null) {
-				double scale = calcColorScale();
+			
+			if(gridSnapshot == null) {
+				double scale = initColorScale();
 
-				//coloring the map-grid
-				for (int i = 0; i < mapData.length; i++) {
-					for (int j = 0; j < mapData[0].length; j++) {
-						String color = calcCellColor(mapData[i][j], scale);
+				for (int row = 0; row < mapHeights.length; row++) {
+					for (int col = 0; col < mapHeights[0].length; col++) {
+						String color = scaleCellColor(mapHeights[row][col], scale);
 						gc.setFill(Paint.valueOf(color));
-						gc.fillRect(j * w, i * h, w, h);
+						gc.fillRect(col * w, row * h, w, h);
 					}
 				}
+				
 				gridSnapshot = this.snapshot(null, null);
 			}
+			
 			gc.drawImage(gridSnapshot, 0, 0);
-			int imgSize = 5;
+			int imageSize = 5;
+			
 			drawSolutionPath();
-			drawImage(gc,planeImage ,planeXcord.get(),planeYcord.get(),this.recSizeWidth() * imgSize , this.recSizeHeight() * imgSize ,heading.get());
-			drawImage(gc,destinationImage ,destinationXcord.doubleValue(), destinationYcord.doubleValue(), this.recSizeWidth() * imgSize , this.recSizeHeight() * imgSize, 0);
-			}
+			
+			drawIcon(gc,destIcon ,dest_X.doubleValue(), dest_Y.doubleValue(), this.recSizeWidth() * imageSize * 1.5 , this.recSizeHeight() * imageSize * 1.5, 0);
+			drawIcon(gc,airplaneIcon ,airplane_X.get(),airplane_Y.get(),this.recSizeWidth() * imageSize * 2 , this.recSizeHeight() * imageSize * 2, heading.get());
 		}
+	}
 	
 	public void drawSolutionPath()
 	{
 		GraphicsContext gc = getGraphicsContext2D();
+		
 		double w=this.recSizeWidth();
 		double h=this.recSizeHeight();
+		
 		String sol = solution.get();
-		if(sol!=null && sol != "") {
-			int desXDataCord = this.startXcord;
-			int desYDataCord = this.startYcord;
-			String n[] = sol.split(",");
+		
+		if(sol != null && !sol.isEmpty()) {
+			int dest_X = this.initial_X;
+			int dest_Y = this.initial_Y;
+			String routInstructions[] = sol.split(",");
+			
 			int numsToAvg = 5;
 			double avg = 0;
 			
-			for(int i = 0; i < n.length ; i++)
+			for(int i = 0; i < routInstructions.length ; i++)
 			{
-				switch(n[i]) {
+				switch(routInstructions[i]) {
 				  case "Up":
 				    avg +=0;
-				    desYDataCord--;
-				    break;
-				  case "Right":
-					  avg +=90;
-					  desXDataCord++;
+				    dest_Y--;
 				    break;
 				  case "Down":
 					  avg += 180;
-					  desYDataCord++;
+					  dest_Y++;
 					    break;
+				  case "Right":
+					  avg +=90;
+					  dest_X++;
+				    break;
 				  case "Left":
 					  avg += 270;
-					  desXDataCord--;
+					  dest_X--;
 					break;
-				
 				}
+				
 				if(i % numsToAvg == numsToAvg - 1) {
-					drawImage(gc,arrowImage,w * desXDataCord, h * desYDataCord, w * 2, h * 2,(int) avg/numsToAvg);
+					drawIcon(gc,routeIcon,w * dest_X, h * dest_Y, w * 2, h * 2,(int) avg/numsToAvg);
 					avg = 0;
 				}
 			}
-				
 		}
-		
 	}
-	
-
-
 }
