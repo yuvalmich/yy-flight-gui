@@ -32,18 +32,17 @@ fx:controller="view.MainWindowController">
                         <Button fx:id="calculatePathButton" mnemonicParsing="false" onAction="#onCalculatePathButtonClicked" text="Calculate path" HBox.hgrow="NEVER"/>
                      </children>
                   </HBox>
-                  <MapGrid fx:id="mapGridCanvas" height="400.0" width="600.0" />
+                  <MapGrid fx:id="mapGridCanvas" height="450.0" width="500.0" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="NEVER">
                <children>
                   <RadioButton fx:id="autoPilotModeButton" mnemonicParsing="false" text="AutoPilot" VBox.vgrow="NEVER" />
-                  <TextArea fx:id="commandLineTextArea" prefHeight="500.0" prefWidth="400.0" promptText="write your commands" VBox.vgrow="NEVER">
+                  <TextArea fx:id="commandLineTextArea" prefHeight="460.0" prefWidth="380.0" promptText="insert code..." VBox.vgrow="NEVER">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></TextArea>
                   <Button fx:id="executeCodeButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onExecuteButtonClicked" text="execute" VBox.vgrow="NEVER" />
-                  <TextArea fx:id="printTextArea" prefHeight="500.0" prefWidth="400.0" promptText="output section"  editable="false" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="NEVER">

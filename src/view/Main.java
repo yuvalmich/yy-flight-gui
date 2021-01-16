@@ -28,7 +28,7 @@ public class Main extends Application {
 			m.addObserver(vm);
 			
 			// Window size
-			Scene scene = new Scene(root, 1400, 650);
+			Scene scene = new Scene(root, 1400, 550);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {

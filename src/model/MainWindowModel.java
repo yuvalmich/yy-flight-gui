@@ -99,12 +99,6 @@ public class MainWindowModel extends Observable {
 	 /// notifiers ///
 	/////////////////
 	
-	public void printOutput(String output) {
-		String data="print " + output;
-		setChanged();
-		notifyObservers(data);
-	}
-	
 	public void notifyDataServerAvailable() {
 		String data="DataServerAvailable";
 		setChanged();
