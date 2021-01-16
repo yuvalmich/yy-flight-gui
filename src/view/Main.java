@@ -16,8 +16,8 @@ public class Main extends Application {
 			Model m = Model.getInstance();
 			ViewModel vm = new ViewModel(m);
 			FXMLLoader fxl=new FXMLLoader();
-			AnchorPane root= fxl.load(getClass().getResource("View.fxml").openStream());
-			View v=fxl.getController(); // View
+			AnchorPane root= fxl.load(getClass().getResource("MainWindow.fxml").openStream());
+			MainWindowController v=fxl.getController(); // View
 			v.setViewModel(vm);
 			vm.addObserver(v);
 			m.addObserver(vm);
