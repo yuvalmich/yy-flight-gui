@@ -16,11 +16,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.util.Pair;
-import viewModel.ViewModel;
+import viewModel.MainWindowViewModel;
 
 public class MainWindowController implements Initializable, Observer {
 
-	ViewModel vm;
+	MainWindowViewModel vm;
 
 	@FXML
 	Button LoadDataButton;
@@ -49,7 +49,7 @@ public class MainWindowController implements Initializable, Observer {
 	@FXML
 	Slider RudderSlider;
 
-	public void setViewModel(ViewModel vm) {
+	public void setViewModel(MainWindowViewModel vm) {
 		this.vm = vm;
 		this.vm.rudderVal.bind(RudderSlider.valueProperty());
 		this.vm.throttleVal.bind(ThrottleSlider.valueProperty());
