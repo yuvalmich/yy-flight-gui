@@ -46,8 +46,8 @@ public class MyDataServer implements DataServer {
 		paths[20] = "/controls/flight/flaps";
 		paths[21] = "/controls/engines/engine/throttle";
 		paths[22] = "/engines/engine/rpm";
-		paths[23]= "position/longitude-deg";
-		paths[24]="position/latitude-deg";
+		paths[23]= "/position/longitude-deg";
+		paths[24]="/position/latitude-deg";
 		return paths;
 	}
 

@@ -264,13 +264,11 @@ public class MainWindowController implements Initializable, Observer {
 		}
 
 		// if already connected.
-		// lat 63.9918
-		// long -22.6054
-//		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
-//		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
+		this.mapGridCanvas.startXcord = (int) (mapGridCanvas.planeXcord.get()/mapGridCanvas.recSizeWidth());
+		this.mapGridCanvas.startYcord = (int) (mapGridCanvas.planeYcord.get()/mapGridCanvas.recSizeHeight());
 		
-		this.mapGridCanvas.startXcord = 50;
-		this.mapGridCanvas.startYcord = 50;
+//		this.mapGridCanvas.startXcord = 50;
+//		this.mapGridCanvas.startYcord = 50;
 		
 		int destinationXcord =  (int) (mapGridCanvas.destinationXcord.get() / mapGridCanvas.recSizeWidth());
 		int destinationYcord = (int) (mapGridCanvas.destinationYcord.get()/ mapGridCanvas.recSizeHeight());

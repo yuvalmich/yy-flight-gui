@@ -96,11 +96,11 @@ public class MainWindowModel extends Observable {
 	}
 	public double getPlaneLatCord()
 	{
-		return fliGearServerHandler.ds.get("position/latitude-deg");
+		return fliGearServerHandler.ds.get("/position/latitude-deg");
 	}
 	public double getPlaneLongCord()
 	{
-		return fliGearServerHandler.ds.get("position/longitude-deg");
+		return fliGearServerHandler.ds.get("/position/longitude-deg");
 	}
 
 }
