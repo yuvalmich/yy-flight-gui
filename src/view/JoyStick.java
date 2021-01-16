@@ -10,71 +10,76 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 
 public class JoyStick extends Canvas {
-
-	private double width,height;
-	private double centerX, centerY;
-	private double radius_small,radius_big;
-	private String base_paint,ball_paint;
-	private double smallX, smallY;
+	private double width, height, outerX, outerY, innerRadius, outerRadius, innerX, innerY;
+	private String background_color,innerRadiusColor;
 	public DoubleProperty elevator, aileron;
 	
-	public JoyStick(@NamedArg("radius_small") Double radius_small, @NamedArg("radius_big") Double radius_big){
-		this.radius_small = radius_small;
-		this.radius_big = radius_big;
-		this.base_paint="#E3E0E2";
-		this.ball_paint="#515151";
+	public JoyStick(@NamedArg("inner_radius") Double inner_radius, @NamedArg("outer_radius") Double outer_radius){
+		this.innerRadius = inner_radius;
+		this.outerRadius = outer_radius;
+		
+		this.background_color = "#66ccff";
+		this.innerRadiusColor = "#4e4e4e";
+		
 		elevator = new SimpleDoubleProperty();
 		aileron = new SimpleDoubleProperty();
+		
 		Platform.runLater(()->{
 		    this.width = getWidth(); 
 			this.height = getHeight();
-			centerX = width/2;
-			centerY = height/2;
-			smallX = centerX;
-			smallY = centerY;
+			outerX = width / 2;
+			outerY = height / 2;
+			innerX = outerX;
+			innerY = outerY;
 			redraw();
 		});
 	}
 	
 	public void drawCenteredCircle(GraphicsContext g, double x, double y, double r) {
-		  x = x-(r/2);
-		  y = y-(r/2);
-		  g.fillOval(x,y,r,r);
-		  g.setFill(Paint.valueOf("#0000"));
-		  g.strokeOval(x,y,r,r);
-		}
+		  x -= r / 2;
+		  y -= r / 2;
+		  g.fillOval(x, y, r, r);
+		  g.setFill(Paint.valueOf("#000000"));
+		  g.strokeOval(x, y, r, r);
+	}
+	
 	public void redraw() {		
 		GraphicsContext gc = getGraphicsContext2D();
+		
 		gc.clearRect(0, 0, width, height);
-		gc.setFill(Paint.valueOf(base_paint));
-		drawCenteredCircle(gc,centerX,centerY,radius_big);
-		gc.setFill(Paint.valueOf(ball_paint));
-		drawCenteredCircle(gc, smallX, smallY,radius_small);
+		
+		gc.setFill(Paint.valueOf(background_color));
+		drawCenteredCircle(gc, outerX, outerY, outerRadius);
+		
+		gc.setFill(Paint.valueOf(innerRadiusColor));
+		drawCenteredCircle(gc, innerX, innerY, innerRadius);
 	}
 	public void setMouseHandler(MouseEvent e) {
-		double r = Math.sqrt(Math.pow((centerX  - e.getX()),2) + Math.pow((centerY - e.getY()), 2));
-		if(r < radius_big/2){
-			smallX = e.getX();
-			smallY = e.getY();
+		double r = Math.sqrt(Math.pow((outerX  - e.getX()),2) + Math.pow((outerY - e.getY()), 2));
+		
+		if(r < outerRadius/4){
+			innerX = e.getX();
+			innerY = e.getY();
 		}
 		else {
-			smallX = (radius_big/2 * (e.getX() - centerX))/r + centerX;
-			smallY = (radius_big/2 * (e.getY() - centerY))/r + centerY;
-			smallX = Math.round((smallX*100))/100;
-			smallY =Math.round((smallY*100))/100;
+			innerX = (outerRadius / 4 * (e.getX() - outerX)) / r + outerX;
+			innerY = (outerRadius / 4 * (e.getY() - outerY)) / r + outerY;
+			innerX = Math.round((innerX*100))/100;
+			innerY =Math.round((innerY*100))/100;
 			
 		}
-		elevator.setValue((smallY - centerY)*2/radius_big);
-		aileron.setValue((smallX - centerX)*2/radius_big);
+		
+		elevator.setValue((innerY - outerY) * 2 /outerRadius);
+		aileron.setValue((innerX - outerX) * 2 /outerRadius);
 		redraw();
 	}
 	
 	public void setMouseEventHandlers(){
 		this.setOnMousePressed((e)->{setMouseHandler(e);});
 		this.setOnMouseDragged((e)-> {setMouseHandler(e);});
-		this.setOnMouseReleased((e)->{
-			smallX = centerX;
-			smallY = centerY;
+		this.setOnMouseReleased((e)-> {
+			innerX = outerX;
+			innerY = outerY;
 			elevator.setValue(0);
 			aileron.setValue(0);
 			redraw();

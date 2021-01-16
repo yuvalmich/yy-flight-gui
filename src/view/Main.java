@@ -27,7 +27,7 @@ public class Main extends Application {
 			
 			// Load xml
 			FXMLLoader fxl =new FXMLLoader();
-			AnchorPane root = fxl.load(getClass().getResource("MainWindow.fxml").openStream());
+			AnchorPane root = fxl.load(getClass().getResource("MainView.fxml").openStream());
 			MainWindowController v = fxl.getController();
 			
 			
