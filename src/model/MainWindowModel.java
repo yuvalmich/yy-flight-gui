@@ -40,7 +40,7 @@ public class MainWindowModel extends Observable {
 	
 	public void printOutput(String output)
 	{
-		String data="print "+output;
+		String data="print " + output;
 		setChanged();
 		notifyObservers(data);
 	}

@@ -20,70 +20,73 @@ import viewModel.MainWindowViewModel;
 
 public class MainWindowController implements Initializable, Observer {
 
-	MainWindowViewModel vm;
+	MainWindowViewModel viewModel;
 
+	// left
 	@FXML
-	Button LoadDataButton;
+	Button loadDataButton;
 	@FXML
-	Button ConnectButton;
+	Button connectButton;
 	@FXML
-	Button ExecuteButton;
+	Button calculatePathButton;
 	@FXML
-	Button CalculatePathButton;
+	MapGrid mapGridCanvas;
+	
+	// center
 	@FXML
-	RadioButton AutoPilotButton;
+	Button executeCodeButton;
 	@FXML
-	RadioButton ManualButton;
-
+	RadioButton autoPilotModeButton;
 	@FXML
-	JoyStick JoyStickCanvas;
+	TextArea commandLineTextArea;
 	@FXML
-	MapGrid GridCanvas;
-
+	TextArea printTextArea;
+	
+	// right
 	@FXML
-	TextArea CommandLineTextArea;
+	RadioButton manualModeButton;
 	@FXML
-	TextArea PrintTextArea;
+	JoyStick joyStickCanvas;
 	@FXML
-	Slider ThrottleSlider;
+	Slider throttleSlider;
 	@FXML
-	Slider RudderSlider;
+	Slider rudderSlider;
 
 	public void setViewModel(MainWindowViewModel vm) {
-		this.vm = vm;
-		this.vm.rudderVal.bind(RudderSlider.valueProperty());
-		this.vm.throttleVal.bind(ThrottleSlider.valueProperty());
-		this.vm.commandLineText.bind(CommandLineTextArea.textProperty());
-		PrintTextArea.textProperty().addListener(new ChangeListener<Object>() {
+		this.viewModel = vm;
+		this.viewModel.rudderVal.bind(rudderSlider.valueProperty());
+		this.viewModel.throttleVal.bind(throttleSlider.valueProperty());
+		this.viewModel.commandLineText.bind(commandLineTextArea.textProperty());
+		printTextArea.textProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				PrintTextArea.setScrollTop(Double.MAX_VALUE); // this will scroll to the bottom
+				printTextArea.setScrollTop(Double.MAX_VALUE); // this will scroll to the bottom
 				// use Double.MIN_VALUE to scroll to the top
 			}
 		});
-		this.vm.printAreaText.addListener(new ChangeListener<String>() {
+		this.viewModel.printAreaText.addListener(new ChangeListener<String>() {
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				PrintTextArea.textProperty().set(newValue);
-				PrintTextArea.appendText("");
+				printTextArea.textProperty().set(newValue);
+				printTextArea.appendText("");
 			}
 		});
 
-		this.vm.aileronVal.bind(JoyStickCanvas.aileron);
-		this.vm.elevatorVal.bind(JoyStickCanvas.elevator);
-		this.GridCanvas.solution.bind(vm.solution);
+		this.viewModel.aileronVal.bind(joyStickCanvas.aileron);
+		this.viewModel.elevatorVal.bind(joyStickCanvas.elevator);
+		this.mapGridCanvas.solution.bind(vm.solution);
 
-		this.GridCanvas.heading.bind(this.vm.heading);
-		this.GridCanvas.serverUp.bind(this.vm.serverUp);
-		JoyStickCanvas.aileron.addListener(new ChangeListener<Number>() {
+		this.mapGridCanvas.heading.bind(this.viewModel.heading);
+		this.mapGridCanvas.serverUp.bind(this.viewModel.serverUp);
+		joyStickCanvas.aileron.addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				if (ManualButton.isSelected()&& (GridCanvas.serverUp.get()))
+				if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
 					vm.aileronSend();			
 			}
 		});
 
-		JoyStickCanvas.elevator.addListener(new ChangeListener<Number>() {
+		joyStickCanvas.elevator.addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				if (ManualButton.isSelected()&& (GridCanvas.serverUp.get()))
+				if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
 					vm.elevatorSend();
 				
 			}
@@ -92,15 +95,15 @@ public class MainWindowController implements Initializable, Observer {
 	}
 
 	public void onRudderSliderChanged() {
-		if (ManualButton.isSelected()&& (GridCanvas.serverUp.get()))
-			vm.RudderSend();
+		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
+			viewModel.RudderSend();
 		
 	}
 
 	@FXML
 	public void onThrottleSliderChanged() {
-		if (ManualButton.isSelected()&& (GridCanvas.serverUp.get()))
-			vm.throttleSend();	
+		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
+			viewModel.throttleSend();	
 	}
 
 	@FXML
@@ -141,7 +144,7 @@ public class MainWindowController implements Initializable, Observer {
 		Optional<Pair<String, String>> result = dialog.showAndWait();
 		
 		result.ifPresent(serverInfo -> {
-			vm.connectToSimulator(serverInfo.getKey(), Integer.parseInt(serverInfo.getValue()));
+			viewModel.connectToSimulator(serverInfo.getKey(), Integer.parseInt(serverInfo.getValue()));
 		});
 	}
 	//this method not used but can be use to rescale the size of the grid to have less rectangles
@@ -200,43 +203,43 @@ public class MainWindowController implements Initializable, Observer {
 					}
 				}
 			}
-			GridCanvas.setMapData(mapData, area, initialLat, initialLong);
+			mapGridCanvas.setMapData(mapData, area, initialLat, initialLong);
 			
-			this.GridCanvas.planeYcord.bind(Bindings.createDoubleBinding(
-					() -> ((110.54 * (GridCanvas.initialLat - vm.planeLatCord.get()) 
-							/ Math.sqrt(GridCanvas.area)) * GridCanvas.recSizeHeight()),vm.planeLatCord));
-			this.GridCanvas.planeXcord.bind(Bindings.createDoubleBinding(
-					() -> ((111.320 *(vm.planeLongCord.get() - GridCanvas.initialLong) * Math.cos(Math.toRadians(GridCanvas.initialLat - vm.planeLatCord.get())))
-							/ Math.sqrt(GridCanvas.area) * GridCanvas.recSizeWidth()),vm.planeLongCord));
+			this.mapGridCanvas.planeYcord.bind(Bindings.createDoubleBinding(
+					() -> ((110.54 * (mapGridCanvas.initialLat - viewModel.planeLatCord.get()) 
+							/ Math.sqrt(mapGridCanvas.area)) * mapGridCanvas.recSizeHeight()),viewModel.planeLatCord));
+			this.mapGridCanvas.planeXcord.bind(Bindings.createDoubleBinding(
+					() -> ((111.320 *(viewModel.planeLongCord.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLatCord.get())))
+							/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLongCord));
 			
-			GridCanvas.setOnMouseClicked((e) -> {
-				GridCanvas.destinationXcord.set(e.getX());
-				GridCanvas.destinationYcord.set(e.getY());
-				GridCanvas.redraw();
+			mapGridCanvas.setOnMouseClicked((e) -> {
+				mapGridCanvas.destinationXcord.set(e.getX());
+				mapGridCanvas.destinationYcord.set(e.getY());
+				mapGridCanvas.redraw();
 			});
 
 			// whenever positions change, redraw the map.
-			GridCanvas.planeXcord.addListener(new ChangeListener<Object>() {
+			mapGridCanvas.planeXcord.addListener(new ChangeListener<Object>() {
 				@Override
 				public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-					GridCanvas.redraw();
+					mapGridCanvas.redraw();
 				}});
-			GridCanvas.planeYcord.addListener(new ChangeListener<Object>() {
+			mapGridCanvas.planeYcord.addListener(new ChangeListener<Object>() {
 				@Override
 				public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-					GridCanvas.redraw();
+					mapGridCanvas.redraw();
 				}});
-			GridCanvas.heading.addListener(new ChangeListener<Object>() {
+			mapGridCanvas.heading.addListener(new ChangeListener<Object>() {
 				@Override
 				public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-					GridCanvas.redraw();
+					mapGridCanvas.redraw();
 				}});
 		}
 	}
 
 	@FXML
 	public void calculatePathPressed() {
-		if (!vm.isConnectedToSolver()) {
+		if (!viewModel.isConnectedToSolver()) {
 			Dialog<Pair<String, String>> dialog = new Dialog<>();
 			dialog.setTitle("Solver Server connection");
 			dialog.setHeaderText("Please insert the ip and port of Solver server");
@@ -269,7 +272,7 @@ public class MainWindowController implements Initializable, Observer {
 			Optional<Pair<String, String>> result = dialog.showAndWait();
 
 			result.ifPresent(serverInfo -> {
-				vm.connectToSolver(serverInfo.getKey(), Integer.parseInt(serverInfo.getValue()));
+				viewModel.connectToSolver(serverInfo.getKey(), Integer.parseInt(serverInfo.getValue()));
 			});
 			
 			if(!result.isPresent()) return;
@@ -281,46 +284,46 @@ public class MainWindowController implements Initializable, Observer {
 //		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
 //		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
 		
-		this.GridCanvas.startXcord = 50;
-		this.GridCanvas.startYcord = 50;
+		this.mapGridCanvas.startXcord = 50;
+		this.mapGridCanvas.startYcord = 50;
 		
-		int destinationXcord =  (int) (GridCanvas.destinationXcord.get() / GridCanvas.recSizeWidth());
-		int destinationYcord = (int) (GridCanvas.destinationYcord.get()/ GridCanvas.recSizeHeight());
-		vm.solveProblem(GridCanvas.mapData,GridCanvas.startXcord, GridCanvas.startYcord,destinationXcord, destinationYcord);
-		this.GridCanvas.redraw();
+		int destinationXcord =  (int) (mapGridCanvas.destinationXcord.get() / mapGridCanvas.recSizeWidth());
+		int destinationYcord = (int) (mapGridCanvas.destinationYcord.get()/ mapGridCanvas.recSizeHeight());
+		viewModel.solveProblem(mapGridCanvas.mapData,mapGridCanvas.startXcord, mapGridCanvas.startYcord,destinationXcord, destinationYcord);
+		this.mapGridCanvas.redraw();
 	}
 
 	@FXML
 	public void ExecutePressed() {
-		if (!AutoPilotButton.isSelected())
+		if (!autoPilotModeButton.isSelected())
 			return;
-		if (vm.interpreterBusy())
-			vm.stop();
+		if (viewModel.interpreterBusy())
+			viewModel.stop();
 		// takes down the current thread and allows another new context of interpretation to run.
-		vm.printAreaText.set("");
-		vm.interpretText();
+		viewModel.printAreaText.set("");
+		viewModel.interpretText();
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		PrintTextArea.setEditable(false);
+		printTextArea.setEditable(false);
 
-		RudderSlider.setShowTickLabels(true);
-		RudderSlider.setShowTickMarks(true);
-		RudderSlider.setMajorTickUnit(0.5f);
-		RudderSlider.setSnapToTicks(true);
+		rudderSlider.setShowTickLabels(true);
+		rudderSlider.setShowTickMarks(true);
+		rudderSlider.setMajorTickUnit(0.5f);
+		rudderSlider.setSnapToTicks(true);
 
-		ThrottleSlider.setShowTickLabels(true);
-		ThrottleSlider.setShowTickMarks(true);
-		ThrottleSlider.setMajorTickUnit(0.25f);
-		ThrottleSlider.setMinorTickCount(4);
-		ThrottleSlider.setSnapToTicks(true);
+		throttleSlider.setShowTickLabels(true);
+		throttleSlider.setShowTickMarks(true);
+		throttleSlider.setMajorTickUnit(0.25f);
+		throttleSlider.setMinorTickCount(4);
+		throttleSlider.setSnapToTicks(true);
 
-		ManualButton.setOnAction((e) -> {
-			vm.stop();
+		manualModeButton.setOnAction((e) -> {
+			viewModel.stop();
 		});
-		AutoPilotButton.setOnAction((e) -> {
-			vm.updateInterpreter(true);
+		autoPilotModeButton.setOnAction((e) -> {
+			viewModel.updateInterpreter(true);
 		});
 
 		File planeImageFile = new File("resources/airplane-icon.png");
@@ -329,12 +332,12 @@ public class MainWindowController implements Initializable, Observer {
 		Image destinationImage = new Image("file:" + destinationImageFile.toURI().getPath());
 		File arrowImageFile = new File("resources/arrow-icon.png");
 		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
-		GridCanvas.setImages(planeImage, destinationImage, arrowImage);
-		PrintTextArea.setEditable(false);
+		mapGridCanvas.setImages(planeImage, destinationImage, arrowImage);
+		printTextArea.setEditable(false);
 		ToggleGroup buttonGroup = new ToggleGroup();
-		AutoPilotButton.setToggleGroup(buttonGroup);
-		ManualButton.setToggleGroup(buttonGroup);
-		JoyStickCanvas.setMouseEventHandlers();
+		autoPilotModeButton.setToggleGroup(buttonGroup);
+		manualModeButton.setToggleGroup(buttonGroup);
+		joyStickCanvas.setMouseEventHandlers();
 	}
 
 	@Override

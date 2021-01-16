@@ -23,38 +23,32 @@ fx:controller="view.MainWindowController">
                <children>
                   <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="ConnectButton" mnemonicParsing="false" onAction="#ConnectPressed" text="Connect">
+                        <Button fx:id="connectButton" mnemonicParsing="false" onAction="#ConnectPressed" text="Connect">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="LoadDataButton" mnemonicParsing="false" onAction="#LoadDataPressed" text="Load data" />
-                        <Button fx:id="CalculatePathButton" mnemonicParsing="false" onAction="#calculatePathPressed" text="Calculate path" HBox.hgrow="NEVER"/>
+                        <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#LoadDataPressed" text="Load data" />
+                        <Button fx:id="calculatePathButton" mnemonicParsing="false" onAction="#calculatePathPressed" text="Calculate path" HBox.hgrow="NEVER"/>
                      </children>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
                   </HBox>
-                  <MapGrid fx:id="GridCanvas" height="800.0" width="800.0" />
+                  <MapGrid fx:id="mapGridCanvas" height="800.0" width="800.0" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="NEVER">
                <children>
-                  <RadioButton fx:id="AutoPilotButton" mnemonicParsing="false" text="AutoPilot" VBox.vgrow="NEVER" />
-                  <TextArea fx:id="CommandLineTextArea" prefHeight="500.0" prefWidth="400.0" promptText="write your commands" VBox.vgrow="NEVER">
+                  <RadioButton fx:id="autoPilotModeButton" mnemonicParsing="false" text="AutoPilot" VBox.vgrow="NEVER" />
+                  <TextArea fx:id="commandLineTextArea" prefHeight="500.0" prefWidth="400.0" promptText="write your commands" VBox.vgrow="NEVER">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></TextArea>
-                  <Button fx:id="ExecuteButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#ExecutePressed" text="execute" VBox.vgrow="NEVER" />
-                  <TextArea fx:id="PrintTextArea" prefHeight="500.0" prefWidth="400.0" promptText="output section"  editable="false" />
+                  <Button fx:id="executeCodeButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#ExecutePressed" text="execute" VBox.vgrow="NEVER" />
+                  <TextArea fx:id="printTextArea" prefHeight="500.0" prefWidth="400.0" promptText="output section"  editable="false" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="NEVER">
                <children>
-                  <RadioButton fx:id="ManualButton" mnemonicParsing="false" text="Manual" VBox.vgrow="NEVER" />
+                  <RadioButton fx:id="manualModeButton" mnemonicParsing="false" text="Manual" VBox.vgrow="NEVER" />
                   <Label text="← Aileron → " VBox.vgrow="NEVER">
                      <padding>
                         <Insets bottom="20.0" />
@@ -63,15 +57,15 @@ fx:controller="view.MainWindowController">
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
                      <children>
                         <Label rotate="270.0" text="throttle" />
-                        <Slider fx:id="ThrottleSlider" max="1.0" maxHeight="200.0" maxWidth="25.0" onMouseReleased ="#onThrottleSliderChanged" orientation="VERTICAL" min="0.0" prefHeight="200.0" prefWidth="25.0" HBox.hgrow="NEVER" />
-					     <JoyStick fx:id="JoyStickCanvas" height="300.0" width="300.0" radius_small="100.0" radius_big="200.0">
+                        <Slider fx:id="throttleSlider" max="1.0" maxHeight="200.0" maxWidth="25.0" onMouseReleased ="#onThrottleSliderChanged" orientation="VERTICAL" min="0.0" prefHeight="200.0" prefWidth="25.0" HBox.hgrow="NEVER" />
+					     <JoyStick fx:id="joyStickCanvas" height="300.0" width="300.0" radius_small="100.0" radius_big="200.0">
 					     </JoyStick>
                         <Label alignment="CENTER_RIGHT" rotate="90.0" text="← elevator → " />
                      </children>
                   </HBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Slider fx:id="RudderSlider" max="1.0" maxHeight="25.0" maxWidth="200.0"  onMouseReleased="#onRudderSliderChanged" min="-1.0" prefHeight="25.0" prefWidth="200.0" VBox.vgrow="NEVER" />
+                        <Slider fx:id="rudderSlider" max="1.0" maxHeight="25.0" maxWidth="200.0"  onMouseReleased="#onRudderSliderChanged" min="-1.0" prefHeight="25.0" prefWidth="200.0" VBox.vgrow="NEVER" />
                         <Label alignment="CENTER" text="rudder" VBox.vgrow="NEVER" />
                      </children>
                   </VBox>
