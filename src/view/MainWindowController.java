@@ -72,7 +72,7 @@ public class MainWindowController implements Initializable, Observer {
 			}
 		});
 
-		this.viewModel.aileronVal.bind(joyStickCanvas.aileron);
+		this.viewModel.aileron.bind(joyStickCanvas.aileron);
 		this.viewModel.elevator.bind(joyStickCanvas.elevator);
 		this.mapGridCanvas.solution.bind(vm.solution);
 
@@ -192,8 +192,8 @@ public class MainWindowController implements Initializable, Observer {
 				() -> ((110.54 * (mapGridCanvas.initialLat - viewModel.planeLat.get()) 
 						/ Math.sqrt(mapGridCanvas.area)) * mapGridCanvas.recSizeHeight()),viewModel.planeLat));
 		this.mapGridCanvas.planeXcord.bind(Bindings.createDoubleBinding(
-				() -> ((111.320 *(viewModel.planeLongCord.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLat.get())))
-						/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLongCord));
+				() -> ((111.320 *(viewModel.planeLong.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLat.get())))
+						/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLong));
 		
 		mapGridCanvas.setOnMouseClicked((e) -> {
 			mapGridCanvas.destinationXcord.set(e.getX());
