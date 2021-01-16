@@ -38,7 +38,7 @@ fx:controller="view.MainWindowController">
             <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="NEVER">
                <children>
                   <RadioButton fx:id="autoPilotModeButton" mnemonicParsing="false" text="AutoPilot" VBox.vgrow="NEVER" />
-                  <TextArea fx:id="commandLineTextArea" prefHeight="460.0" prefWidth="380.0" promptText="insert code..." VBox.vgrow="NEVER">
+                  <TextArea fx:id="commandLineTextArea" prefHeight="460.0" prefWidth="380.0" promptText="insert code..." VBox.vgrow="NEVER" style="-fx-control-inner-background:#4e4e4e; -fx-text-fill:#66ccff">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></TextArea>
