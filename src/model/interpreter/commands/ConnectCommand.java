@@ -2,11 +2,11 @@ package model.interpreter.commands;
 
 import java.util.List;
 
-import model.dataHandler.DataClient;
-import model.dataHandler.MyDataClient;
+import model.dataConnector.DataClient;
+import model.dataConnector.FlightDataClient;
 
 public class ConnectCommand implements Command {
-	public static DataClient client = new MyDataClient();// we only open one session towards the simulator.
+	public static DataClient client = new FlightDataClient();// we only open one session towards the simulator.
 
 	@Override
 	public int getArguments(String[] tokens, int idx, List<Object> emptyList) {

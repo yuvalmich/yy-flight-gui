@@ -1,7 +1,7 @@
 package model.interpreter.Variable;
 
-import model.dataHandler.DataClient;
-import model.dataHandler.DataGetter;
+import model.dataConnector.DataClient;
+import model.dataConnector.DataGetter;
 import model.interpreter.commands.ConnectCommand;
 
 public class BoundRemoteVar implements Var {

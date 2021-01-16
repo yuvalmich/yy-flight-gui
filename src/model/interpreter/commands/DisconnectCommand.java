@@ -2,9 +2,9 @@ package model.interpreter.commands;
 
 import java.util.List;
 
-import model.dataHandler.DataClient;
-import model.dataHandler.DataServer;
-import model.dataHandler.MyDataServer;
+import model.dataConnector.DataClient;
+import model.dataConnector.DataServer;
+import model.dataConnector.FlightDataServer;
 
 public class DisconnectCommand implements Command {
 	@Override
@@ -15,8 +15,8 @@ public class DisconnectCommand implements Command {
 	@Override
 	public void doCommand(List<Object> args) {
 		DataClient client = ConnectCommand.client;
-		Object lock = MyDataServer.lock;
-		DataServer ds = MyDataServer.getServer();
+		Object lock = FlightDataServer.lock;
+		DataServer ds = FlightDataServer.getServer();
 		ds.close();
 		synchronized (lock)// we ensure the server has received all the relevant changes from the
 		{// simulator client so we need to wait for it to finish reading before the

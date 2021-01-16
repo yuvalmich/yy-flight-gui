@@ -1,7 +1,8 @@
 package model.flightGearServerHandler;
 
 import java.util.Observable;
-import model.dataHandler.*;
+
+import model.dataConnector.*;
 
 public class FlightGearServerHandler extends Observable {
 	public DataServer ds;
@@ -9,8 +10,8 @@ public class FlightGearServerHandler extends Observable {
 	
 	public FlightGearServerHandler()
 	{		
-		ds=MyDataServer.getServer();
-		dc=new MyDataClient();
+		ds=FlightDataServer.getServer();
+		dc=new FlightDataClient();
 	}
 	public void connect(String ip, int serverPort) {
 		System.out.println("waiting for simulator...");
