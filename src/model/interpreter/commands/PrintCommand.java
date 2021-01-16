@@ -1,14 +1,10 @@
 package model.interpreter.commands;
 
 import java.util.List;
-
-import model.MainWindowModel;
 import model.interpreter.expressions.ExpressionCalculate;
 
 
 public class PrintCommand implements Command {
-	//with spaces.
-	MainWindowModel m=MainWindowModel.getInstance();
 	@Override
 	public int getArguments(String[] tokens, int idx, List<Object> emptyList) {
 		return StringToArgumentParser.parse(tokens, idx, 1, emptyList, "String");
@@ -24,9 +20,5 @@ public class PrintCommand implements Command {
 		else {
 			str = str.substring(1, str.length()-1);
 		}		
-	  m.printOutput(str);
 	}
-
 }
-
-

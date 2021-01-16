@@ -40,8 +40,6 @@ public class MainWindowController implements Initializable, Observer {
 	RadioButton autoPilotModeButton;
 	@FXML
 	TextArea commandLineTextArea;
-	@FXML
-	TextArea printTextArea;
 	
 	// right
 	@FXML
@@ -58,19 +56,6 @@ public class MainWindowController implements Initializable, Observer {
 		this.viewModel.rudder.bind(rudderSlider.valueProperty());
 		this.viewModel.throttle.bind(throttleSlider.valueProperty());
 		this.viewModel.cliText.bind(commandLineTextArea.textProperty());
-		printTextArea.textProperty().addListener(new ChangeListener<Object>() {
-			@Override
-			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				printTextArea.setScrollTop(Double.MAX_VALUE); // this will scroll to the bottom
-				// use Double.MIN_VALUE to scroll to the top
-			}
-		});
-		this.viewModel.printAreaText.addListener(new ChangeListener<String>() {
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				printTextArea.textProperty().set(newValue);
-				printTextArea.appendText("");
-			}
-		});
 
 		this.viewModel.aileron.bind(joyStickCanvas.aileron);
 		this.viewModel.elevator.bind(joyStickCanvas.elevator);
@@ -297,7 +282,6 @@ public class MainWindowController implements Initializable, Observer {
 			viewModel.stop();			
 		}
 		
-		viewModel.printAreaText.set("");
 		viewModel.interpretCode();
 	}
 	
@@ -322,8 +306,6 @@ public class MainWindowController implements Initializable, Observer {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		printTextArea.setEditable(false);
-
 		throttleSlider.setShowTickLabels(true);
 		throttleSlider.setMinorTickCount(4);
 		throttleSlider.setShowTickMarks(true);
@@ -350,8 +332,7 @@ public class MainWindowController implements Initializable, Observer {
 		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
 		
 		mapGridCanvas.setImages(planeImage, destinationImage, arrowImage);
-		printTextArea.setEditable(false);
-		
+ 		
 		ToggleGroup buttonGroup = new ToggleGroup();
 		autoPilotModeButton.setToggleGroup(buttonGroup);
 		manualModeButton.setToggleGroup(buttonGroup);

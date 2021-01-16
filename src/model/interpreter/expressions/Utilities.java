@@ -26,10 +26,7 @@ public class Utilities {
 			return new RegularVar(value);
 		}
 		return null;
-
 	}
-	
-
 	
 	public static boolean IsVarOrCmd(String str)
 	{
@@ -52,6 +49,4 @@ public class Utilities {
 	{
 		return (CommandsMap.getInstance().get(str)!=null);
 	}
-	
-	
 }

@@ -5,7 +5,6 @@ public class BoundScriptVar implements Var {
 
 	public BoundScriptVar(Var bound_to) {
 		this.bound_to = bound_to;
-
 	}
 
 	@Override

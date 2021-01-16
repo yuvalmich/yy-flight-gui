@@ -17,7 +17,7 @@ import model.MainWindowModel;
 public class MainWindowViewModel extends Observable implements Observer {
 	MainWindowModel model;
 	
-	public StringProperty cliText, printAreaText, solution;
+	public StringProperty cliText, solution;
 	public DoubleProperty throttle, rudder, planeLat, planeLong, aileron, elevator, heading;
 	public BooleanProperty serverUp;
 	
@@ -27,7 +27,6 @@ public class MainWindowViewModel extends Observable implements Observer {
 		this.model = model;
 		
 		cliText = new SimpleStringProperty();
-		printAreaText = new SimpleStringProperty();
 		solution = new SimpleStringProperty();
 		
 		throttle = new SimpleDoubleProperty();
@@ -116,9 +115,6 @@ public class MainWindowViewModel extends Observable implements Observer {
 		String value= sj.toString();
 		
 		switch(action) {
-   			case("print"):
-   				handlePrint(value);
-   				break;
    			case("DataServerAvailable"):
    				handleServerAvailable();
    				break;
@@ -147,14 +143,6 @@ public class MainWindowViewModel extends Observable implements Observer {
 		   }).start();
 	}
 
-	private void handlePrint(String value) {
-		String curr_text = this.printAreaText.get();
-		   if(curr_text == null) {
-			   curr_text = "";
-		   }
-		   this.printAreaText.set(curr_text + value + "\n");
-	}
-	
 	public void stop() {
 		model.stop();
 	}
