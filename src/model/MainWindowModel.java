@@ -43,11 +43,11 @@ public class MainWindowModel extends Observable {
 	}
 	
 	public double getPlaneLatCord() {
-		return flightGearHandler.ds.get("position/latitude-deg");
+		return flightGearHandler.ds.get("/position/latitude-deg");
 	}
 	
 	public double getPlaneLongCord() {
-		return flightGearHandler.ds.get("position/longitude-deg");
+		return flightGearHandler.ds.get("/position/longitude-deg");
 	}
 
 	  //////////////////
