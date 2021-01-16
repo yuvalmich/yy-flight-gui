@@ -32,7 +32,7 @@ fx:controller="view.MainWindowController">
                         <Button fx:id="calculatePathButton" mnemonicParsing="false" onAction="#onCalculatePathButtonClicked" text="Calculate path" HBox.hgrow="NEVER"/>
                      </children>
                   </HBox>
-                  <MapGrid fx:id="mapGridCanvas" height="800.0" width="800.0" />
+                  <MapGrid fx:id="mapGridCanvas" height="400.0" width="600.0" />
                </children>
             </VBox>
             <VBox alignment="TOP_CENTER" spacing="10.0" HBox.hgrow="NEVER">

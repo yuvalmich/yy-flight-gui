@@ -268,10 +268,6 @@ public class MainWindowController implements Initializable, Observer {
 		this.mapGridCanvas.startXcord = (int) (mapGridCanvas.planeXcord.get()/mapGridCanvas.recSizeWidth());
 		this.mapGridCanvas.startYcord = (int) (mapGridCanvas.planeYcord.get()/mapGridCanvas.recSizeHeight());
 		
-		// todo: remove
-		this.mapGridCanvas.startXcord = 50;
-		this.mapGridCanvas.startYcord = 50;
-		
 		int destinationXcord =  (int) (mapGridCanvas.destinationXcord.get() / mapGridCanvas.recSizeWidth());
 		int destinationYcord = (int) (mapGridCanvas.destinationYcord.get()/ mapGridCanvas.recSizeHeight());
 		viewModel.solveProblem(mapGridCanvas.mapData,mapGridCanvas.startXcord, mapGridCanvas.startYcord,destinationXcord, destinationYcord);
