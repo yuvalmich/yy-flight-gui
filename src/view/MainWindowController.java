@@ -18,7 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Pair;
 import viewModel.ViewModel;
 
-public class View implements Initializable, Observer {
+public class MainWindowController implements Initializable, Observer {
 
 	ViewModel vm;
 
