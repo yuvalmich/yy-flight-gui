@@ -23,13 +23,13 @@ fx:controller="view.MainWindowController">
                <children>
                   <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="connectButton" mnemonicParsing="false" onAction="#ConnectPressed" text="Connect">
+                        <Button fx:id="connectButton" mnemonicParsing="false" onAction="#onConnectButtonClicked" text="Connect">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#LoadDataPressed" text="Load data" />
-                        <Button fx:id="calculatePathButton" mnemonicParsing="false" onAction="#calculatePathPressed" text="Calculate path" HBox.hgrow="NEVER"/>
+                        <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#onLoadDataButtonClicked" text="Load data" />
+                        <Button fx:id="calculatePathButton" mnemonicParsing="false" onAction="#onCalculatePathButtonClicked" text="Calculate path" HBox.hgrow="NEVER"/>
                      </children>
                   </HBox>
                   <MapGrid fx:id="mapGridCanvas" height="800.0" width="800.0" />
@@ -42,7 +42,7 @@ fx:controller="view.MainWindowController">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></TextArea>
-                  <Button fx:id="executeCodeButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#ExecutePressed" text="execute" VBox.vgrow="NEVER" />
+                  <Button fx:id="executeCodeButton" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#onExecuteButtonClicked" text="execute" VBox.vgrow="NEVER" />
                   <TextArea fx:id="printTextArea" prefHeight="500.0" prefWidth="400.0" promptText="output section"  editable="false" />
                </children>
             </VBox>

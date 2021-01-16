@@ -107,7 +107,7 @@ public class MainWindowController implements Initializable, Observer {
 	}
 
 	@FXML
-	public void ConnectPressed() {
+	public void onConnectButtonClicked() {
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
 		dialog.setTitle("FlightGear Server connection");
 		dialog.setHeaderText("Please insert the ip and port of the FlightGear server");
@@ -149,7 +149,7 @@ public class MainWindowController implements Initializable, Observer {
 	}
 
 	@FXML
-	public void LoadDataPressed() {
+	public void onLoadDataButtonClicked() {
 
 		FileChooser fc = new FileChooser();
 		fc.setTitle("load csv File");
@@ -223,7 +223,7 @@ public class MainWindowController implements Initializable, Observer {
 	}
 
 	@FXML
-	public void calculatePathPressed() {
+	public void onCalculatePathButtonClicked() {
 		if (!viewModel.isConnectedToSolver()) {
 			Dialog<Pair<String, String>> dialog = new Dialog<>();
 			dialog.setTitle("Solver Server connection");
@@ -279,7 +279,7 @@ public class MainWindowController implements Initializable, Observer {
 	}
 
 	@FXML
-	public void ExecutePressed() {
+	public void onExecuteButtonClicked() {
 		if (!autoPilotModeButton.isSelected())
 			return;
 		if (viewModel.interpreterBusy())
