@@ -2,14 +2,14 @@ package model;
 
 import java.util.Observable;
 
-import model.flightGearServerHandler.FlightGearServerHandler;
+import model.flightGearConnector.FlightGearConnector;
 import model.interpreter.MyInterpreter;
 import model.solverServerHandler.SolverServerHandler;
 
 
 public class MainWindowModel extends Observable {
 	public SolverServerHandler solverHandler;
-	public FlightGearServerHandler flightGearHandler;
+	public FlightGearConnector flightGearHandler;
 	public MyInterpreter interpreter;	
 	
 	private static class ModelHolder {
@@ -18,7 +18,7 @@ public class MainWindowModel extends Observable {
 	
 	private MainWindowModel() {
 		this.solverHandler=new SolverServerHandler();
-		this.flightGearHandler = new FlightGearServerHandler();
+		this.flightGearHandler = new FlightGearConnector();
 		this.interpreter = new MyInterpreter();
 	}
 
@@ -35,19 +35,19 @@ public class MainWindowModel extends Observable {
 	}
 
 	public void setflightVar(String path, double value) {
-		flightGearHandler.dc.set(path, value);
+		flightGearHandler.dataClient.set(path, value);
 	}
 	
 	public double getHeading() {
-		return flightGearHandler.ds.get("/instrumentation/magnetic-compass/indicated-heading-deg");
+		return flightGearHandler.dataServer.get("/instrumentation/magnetic-compass/indicated-heading-deg");
 	}
 	
 	public double getPlaneLatCord() {
-		return flightGearHandler.ds.get("/position/latitude-deg");
+		return flightGearHandler.dataServer.get("/position/latitude-deg");
 	}
 	
 	public double getPlaneLongCord() {
-		return flightGearHandler.ds.get("/position/longitude-deg");
+		return flightGearHandler.dataServer.get("/position/longitude-deg");
 	}
 
 	  //////////////////
