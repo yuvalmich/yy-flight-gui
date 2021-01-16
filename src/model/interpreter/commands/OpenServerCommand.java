@@ -1,6 +1,7 @@
 package model.interpreter.commands;
 import java.util.*;
-import model.dataHandler.*;
+
+import model.dataConnector.*;
 public class OpenServerCommand implements Command {
 private DataServer server;
 	@Override
@@ -13,7 +14,7 @@ private DataServer server;
 		int port=(int)args.get(0);
 		int freq=(int)args.get(1);
 		
-		this.server=MyDataServer.getServer();//object created for the first time 
+		this.server=FlightDataServer.getServer();//object created for the first time 
 		Object lock=new Object();//passed to the server to make this thread to wake up when needed 
 		server.open(port,freq,lock);
 		DataSynchronizer.waitForData(lock);//makes sure that our server first opens and recieves data before we might execute instructions

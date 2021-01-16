@@ -2,7 +2,7 @@ package model.interpreter.commands;
 
 import java.util.List;
 
-import model.dataHandler.MyDataServer;
+import model.dataConnector.FlightDataServer;
 import model.interpreter.MyInterpreter;
 import model.interpreter.Variable.*;
 
@@ -26,7 +26,7 @@ public class BindAssignmentCommand implements Command {
 		}
 		else //binding to a remote variable
 		{			
-			  MyInterpreter.SymbolTable.put(name,new BoundRemoteVar(identifier,MyDataServer.getServer()));						
+			  MyInterpreter.SymbolTable.put(name,new BoundRemoteVar(identifier,FlightDataServer.getServer()));						
 		}
 		
 

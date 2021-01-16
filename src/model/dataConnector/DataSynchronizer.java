@@ -1,6 +1,4 @@
-package model.dataHandler;
-
-
+package model.dataConnector;
 
 public class DataSynchronizer {
 	public static void waitForData(Object lock) {
@@ -9,6 +7,7 @@ public class DataSynchronizer {
 				lock.wait();
 			}
 		} catch (InterruptedException e) {
+			System.out.println("Something went worng.");
 		}
 	}
 	
