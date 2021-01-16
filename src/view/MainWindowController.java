@@ -55,9 +55,9 @@ public class MainWindowController implements Initializable, Observer {
 
 	public void setViewModel(MainWindowViewModel vm) {
 		this.viewModel = vm;
-		this.viewModel.rudderVal.bind(rudderSlider.valueProperty());
-		this.viewModel.throttleVal.bind(throttleSlider.valueProperty());
-		this.viewModel.commandLineText.bind(commandLineTextArea.textProperty());
+		this.viewModel.rudder.bind(rudderSlider.valueProperty());
+		this.viewModel.throttle.bind(throttleSlider.valueProperty());
+		this.viewModel.cliText.bind(commandLineTextArea.textProperty());
 		printTextArea.textProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
@@ -72,8 +72,8 @@ public class MainWindowController implements Initializable, Observer {
 			}
 		});
 
-		this.viewModel.aileronVal.bind(joyStickCanvas.aileron);
-		this.viewModel.elevatorVal.bind(joyStickCanvas.elevator);
+		this.viewModel.aileron.bind(joyStickCanvas.aileron);
+		this.viewModel.elevator.bind(joyStickCanvas.elevator);
 		this.mapGridCanvas.solution.bind(vm.solution);
 
 		this.mapGridCanvas.heading.bind(this.viewModel.heading);
@@ -189,11 +189,11 @@ public class MainWindowController implements Initializable, Observer {
 		mapGridCanvas.setMapData(mapData, area, startLat, startLong);
 		
 		this.mapGridCanvas.planeYcord.bind(Bindings.createDoubleBinding(
-				() -> ((110.54 * (mapGridCanvas.initialLat - viewModel.planeLatCord.get()) 
-						/ Math.sqrt(mapGridCanvas.area)) * mapGridCanvas.recSizeHeight()),viewModel.planeLatCord));
+				() -> ((110.54 * (mapGridCanvas.initialLat - viewModel.planeLat.get()) 
+						/ Math.sqrt(mapGridCanvas.area)) * mapGridCanvas.recSizeHeight()),viewModel.planeLat));
 		this.mapGridCanvas.planeXcord.bind(Bindings.createDoubleBinding(
-				() -> ((111.320 *(viewModel.planeLongCord.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLatCord.get())))
-						/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLongCord));
+				() -> ((111.320 *(viewModel.planeLong.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLat.get())))
+						/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLong));
 		
 		mapGridCanvas.setOnMouseClicked((e) -> {
 			mapGridCanvas.destinationXcord.set(e.getX());
@@ -297,12 +297,12 @@ public class MainWindowController implements Initializable, Observer {
 			return;			
 		}
 		
-		if (viewModel.interpreterBusy()) {
+		if (viewModel.isInterpreterBusy()) {
 			viewModel.stop();			
 		}
 		
 		viewModel.printAreaText.set("");
-		viewModel.interpretText();
+		viewModel.interpretCode();
 	}
 	
 	  /////////////////////

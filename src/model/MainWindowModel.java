@@ -8,100 +8,113 @@ import model.solverServerHandler.SolverServerHandler;
 
 
 public class MainWindowModel extends Observable {
-
-	public MyInterpreter interpreter;
-	public FlightGearServerHandler fliGearServerHandler;
-	public SolverServerHandler solvServerHandler;
+	public SolverServerHandler solverHandler;
+	public FlightGearServerHandler flightGearHandler;
+	public MyInterpreter interpreter;	
+	
 	private static class ModelHolder {
 		public static final MainWindowModel model = new MainWindowModel();
 	}
 	
 	private MainWindowModel() {
+		this.solverHandler=new SolverServerHandler();
+		this.flightGearHandler = new FlightGearServerHandler();
 		this.interpreter = new MyInterpreter();
-		this.fliGearServerHandler = new FlightGearServerHandler();
-		this.solvServerHandler=new SolverServerHandler();
 	}
 
 	public static MainWindowModel getInstance() {
 		return ModelHolder.model;
 	}
 	
+	  /////////////////
+	 /// flightGear //
+	/////////////////
+	
 	public void connectToSimulator(String ip, int port) {
-		fliGearServerHandler.connect(ip, port);
+		flightGearHandler.connect(ip, port);
 	}
 
-	public void setVar(String path, double value) {
-		fliGearServerHandler.dc.set(path, value);
+	public void setflightVar(String path, double value) {
+		flightGearHandler.dc.set(path, value);
+	}
+	
+	public double getHeading() {
+		return flightGearHandler.ds.get("/instrumentation/magnetic-compass/indicated-heading-deg");
+	}
+	
+	public double getPlaneLatCord() {
+		return flightGearHandler.ds.get("position/latitude-deg");
+	}
+	
+	public double getPlaneLongCord() {
+		return flightGearHandler.ds.get("position/longitude-deg");
 	}
 
-	public void interpretText(String code) {
+	  //////////////////
+	 /// interpreter //
+	//////////////////
+	
+	public void interpretCode(String code) {
 		interpreter.interpret(code);
 	}
 	
-	public void printOutput(String output)
-	{
+	public boolean isInterpreterBusy() {
+		return interpreter.interpreterBusy();
+	}
+	
+	public void stop() {
+		interpreter.stop();
+	}
+	
+	public void updateIntepreterStatus(boolean state) {
+		MyInterpreter.enabled = state;
+	}
+	
+	  //////////////
+	 /// solver ///
+	//////////////
+	
+	public void connectToSolver(String ip, int port) {
+		System.out.println("connecting to solver");
+		solverHandler.connect(ip,port);	
+		System.out.println("solver connected");
+	}
+	
+	public boolean isConnectedToSolver() {
+		return  (SolverServerHandler.connection!=null);
+	}
+	
+	public void solveProblem(int[][] mapGrid, int currentX, int currentY, int xDest, int yDest) {
+		String sol = solverHandler.solveProblem(mapGrid,currentX,currentY,xDest, yDest);
+		
+		if (sol == "") {
+			System.out.println("Something went wrong.");
+		}
+		
+		passSolution(sol);
+	}
+
+
+	  /////////////////
+	 /// notifiers ///
+	/////////////////
+	
+	public void printOutput(String output) {
 		String data="print " + output;
 		setChanged();
 		notifyObservers(data);
 	}
 	
-	public boolean interpreterBusy()
-	{
-		return interpreter.interpreterBusy();
-	}
-	
-	public void stop()
-	{
-		interpreter.stop();
-	}
-	
-	public void updateIntepreter(boolean state)
-	{
-		MyInterpreter.enabled=state;
-	}
-
-	public void connectToSolver(String ip, int port) {
-		System.out.println("ip: "+ip+" port: "+port);
-		solvServerHandler.connect(ip,port);	
-	}
-	
-	public boolean isConnectedToSolver()
-	{
-		return  (SolverServerHandler.connection!=null);
-	}
-	
-	public void solveProblem(int[][] mapGrid, int currentX, int currentY, int xDest, int yDest)
-	{
-		String sol = solvServerHandler.solveProblem(mapGrid,currentX,currentY,xDest, yDest);
-		if(sol == "") {System.out.println("ERROR ON READING LINE");}
-		passSolution(sol);
-	}
-
 	public void notifyDataServerAvailable() {
 		String data="DataServerAvailable";
 		setChanged();
 		notifyObservers(data);
 	}
 	
-	public void passSolution(String solution)
-	{
-		String data="gotSolution "+solution;
+	public void passSolution(String solution) {
+		String data="gotSolution " + solution;
 		setChanged();
 		notifyObservers(data);
 	}
-	
-	public double getHeading()
-	{
-		return fliGearServerHandler.ds.get("/instrumentation/magnetic-compass/indicated-heading-deg");
-	}
-	public double getPlaneLatCord()
-	{
-		return fliGearServerHandler.ds.get("/position/latitude-deg");
-	}
-	public double getPlaneLongCord()
-	{
-		return fliGearServerHandler.ds.get("/position/longitude-deg");
-	}
 
 }
-	
