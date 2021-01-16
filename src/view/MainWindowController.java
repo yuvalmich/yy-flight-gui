@@ -1,21 +1,22 @@
 package view;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.*;
+import java.io.File;
 import javafx.scene.control.*;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.Image;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.net.URL;
+import javafx.beans.binding.Bindings;
+import javafx.scene.image.Image;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.GridPane;
+import java.io.FileNotFoundException;
 import javafx.stage.FileChooser;
+import javafx.application.Platform;
 import javafx.util.Pair;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.layout.GridPane;
+import javafx.fxml.Initializable;
+
 import viewModel.MainWindowViewModel;
 
 public class MainWindowController implements Initializable, Observer {
@@ -94,17 +95,9 @@ public class MainWindowController implements Initializable, Observer {
 
 	}
 
-	public void onRudderSliderChanged() {
-		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
-			viewModel.RudderSend();
-		
-	}
-
-	@FXML
-	public void onThrottleSliderChanged() {
-		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
-			viewModel.throttleSend();	
-	}
+	  ////////////////////
+	 /// left methods ///
+	////////////////////
 
 	@FXML
 	public void onConnectButtonClicked() {
@@ -263,12 +256,10 @@ public class MainWindowController implements Initializable, Observer {
 			if(!result.isPresent()) return;
 		}
 
-		// if already connected.
-		// lat 63.9918
-		// long -22.6054
-//		this.GridCanvas.startXcord = (int) (GridCanvas.planeXcord.get()/GridCanvas.recSizeWidth());
-//		this.GridCanvas.startYcord = (int) (GridCanvas.planeYcord.get()/GridCanvas.recSizeHeight());
+		this.mapGridCanvas.startXcord = (int) (mapGridCanvas.planeXcord.get()/mapGridCanvas.recSizeWidth());
+		this.mapGridCanvas.startYcord = (int) (mapGridCanvas.planeYcord.get()/mapGridCanvas.recSizeHeight());
 		
+		// todo: remove
 		this.mapGridCanvas.startXcord = 50;
 		this.mapGridCanvas.startYcord = 50;
 		
@@ -278,6 +269,10 @@ public class MainWindowController implements Initializable, Observer {
 		this.mapGridCanvas.redraw();
 	}
 
+	  //////////////////////
+	 /// center methods ///
+	//////////////////////
+	
 	@FXML
 	public void onExecuteButtonClicked() {
 		if (!autoPilotModeButton.isSelected())
@@ -288,7 +283,26 @@ public class MainWindowController implements Initializable, Observer {
 		viewModel.printAreaText.set("");
 		viewModel.interpretText();
 	}
+	
+	  /////////////////////
+	 /// right methods ///
+	/////////////////////
+	
+	public void onRudderSliderChanged() {
+		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
+			viewModel.RudderSend();
+		
+	}
 
+	@FXML
+	public void onThrottleSliderChanged() {
+		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
+			viewModel.throttleSend();	
+	}
+
+	  ////////////////////////
+	 /// Override methods ///
+	////////////////////////
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		printTextArea.setEditable(false);
