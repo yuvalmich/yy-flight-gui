@@ -13,18 +13,26 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			
 			MainWindowModel m = MainWindowModel.getInstance();
 			MainWindowViewModel vm = new MainWindowViewModel(m);
-			FXMLLoader fxl=new FXMLLoader();
-			AnchorPane root= fxl.load(getClass().getResource("MainWindow.fxml").openStream());
-			MainWindowController v=fxl.getController(); // View
+			
+			// Load xml
+			FXMLLoader fxl =new FXMLLoader();
+			AnchorPane root = fxl.load(getClass().getResource("MainWindow.fxml").openStream());
+			MainWindowController v = fxl.getController();
+			
+			// Observers
 			v.setViewModel(vm);
 			vm.addObserver(v);
 			m.addObserver(vm);
-			Scene scene = new Scene(root,1400,650);
+			
+			// Window size
+			Scene scene = new Scene(root, 1400, 650);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
+			System.out.println("startup failed.");
 			e.printStackTrace();
 		}
 	}
