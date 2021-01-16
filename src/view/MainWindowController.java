@@ -324,11 +324,11 @@ public class MainWindowController implements Initializable, Observer {
 			viewModel.updateInterpreter(true);
 		});
 
-		File planeImageFile = new File("assets/airplane-icon.png");
+		File planeImageFile = new File("assets/airplane.png");
 		Image planeImage = new Image("file:" + planeImageFile.toURI().getPath());
-		File destinationImageFile = new File("assets/destination-icon.png");
+		File destinationImageFile = new File("assets/dest-icon.png");
 		Image destinationImage = new Image("file:" + destinationImageFile.toURI().getPath());
-		File arrowImageFile = new File("assets/arrow-icon.png");
+		File arrowImageFile = new File("assets/arrow.png");
 		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
 		
 		mapGridCanvas.setImages(planeImage, destinationImage, arrowImage);
