@@ -1,21 +1,22 @@
 package view;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
 import java.util.*;
+import java.io.File;
 import javafx.scene.control.*;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.image.Image;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.net.URL;
+import javafx.beans.binding.Bindings;
+import javafx.scene.image.Image;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.layout.GridPane;
+import java.io.FileNotFoundException;
 import javafx.stage.FileChooser;
+import javafx.application.Platform;
 import javafx.util.Pair;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.layout.GridPane;
+import javafx.fxml.Initializable;
+
 import viewModel.MainWindowViewModel;
 
 public class MainWindowController implements Initializable, Observer {
@@ -94,23 +95,15 @@ public class MainWindowController implements Initializable, Observer {
 
 	}
 
-	public void onRudderSliderChanged() {
-		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
-			viewModel.RudderSend();
-		
-	}
-
-	@FXML
-	public void onThrottleSliderChanged() {
-		if (manualModeButton.isSelected()&& (mapGridCanvas.serverUp.get()))
-			viewModel.throttleSend();	
-	}
+	  ////////////////////
+	 /// left methods ///
+	////////////////////
 
 	@FXML
 	public void onConnectButtonClicked() {
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
-		dialog.setTitle("FlightGear Server connection");
-		dialog.setHeaderText("Please insert the ip and port of the FlightGear server");
+		dialog.setTitle("connect tp FlightGear");
+		dialog.setHeaderText("Please enter the FlightGear ip and port");
 
 		ButtonType loginButtonType = new ButtonType("connect", ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
@@ -131,6 +124,7 @@ public class MainWindowController implements Initializable, Observer {
 
 		dialog.getDialogPane().setContent(grid);
 		Platform.runLater(() -> ip.requestFocus());
+		
 		ip.setText("127.0.0.1");
 		port.setText("5402");
 
@@ -150,86 +144,90 @@ public class MainWindowController implements Initializable, Observer {
 
 	@FXML
 	public void onLoadDataButtonClicked() {
-
 		FileChooser fc = new FileChooser();
-		fc.setTitle("load csv File");
-		fc.setInitialDirectory(new File("./resources/maps"));
+		fc.setTitle("load map");
+		fc.setInitialDirectory(new File("./assets/maps"));
+		
 		File chosen = fc.showOpenDialog(null);
-		if (chosen != null) {
+		
+		if (chosen == null) {
+			return;
+		}
+		
+		List<String> map = new LinkedList<String>();
+		Scanner scanner = null;
+		
+		try {
+			scanner = new Scanner(chosen);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
+		while (scanner.hasNext()) {
+			map.add(scanner.next());
+		}
+		scanner.close();
 
-			List<String> list = new LinkedList<String>();
-			Scanner scanner = null;
-			try {
-				scanner = new Scanner(chosen);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			while (scanner.hasNext()) {
-				list.add(scanner.next());
-			}
-			scanner.close();
+		String[] coordinates = map.get(0).split(",");
+		double startLat = Double.parseDouble(coordinates[1]);
+		double startLong = Double.parseDouble(coordinates[0]);
+		double area = Double.parseDouble(map.get(1).split(",")[0]);
 
-			// scanning initial coordinates and the area of each cell (km^2)
-			String[] coordinates = list.get(0).split(",");
-			double initialLat = Double.parseDouble(coordinates[1]);
-			double initialLong = Double.parseDouble(coordinates[0]);
-			double area = Double.parseDouble(list.get(1).split(",")[0]);
-
-			// Scanning the heights matrix. Each cell is measured by meters.
-			int row = list.size() - 2;
-			int col = list.get(2).split(",").length;
-			int[][] mapData = new int[row][col];
-			for (int i = 2; i < row + 2; i++) {
-				String[] data = list.get(i).split(",");
-				for (int j = 0; j < col; j++) {
-					mapData[i - 2][j] = Integer.parseInt(data[j]);
-					if (mapData[i - 2][j] < 1) {
-						mapData[i - 2][j] = 1;
-					}
+		int row = map.size() - 2;
+		int col = map.get(2).split(",").length;
+		int[][] mapData = new int[row][col];
+		for (int i = 2; i < row + 2; i++) {
+			String[] data = map.get(i).split(",");
+			for (int j = 0; j < col; j++) {
+				mapData[i - 2][j] = Integer.parseInt(data[j]);
+				if (mapData[i - 2][j] < 1) {
+					mapData[i - 2][j] = 1;
 				}
 			}
-			mapGridCanvas.setMapData(mapData, area, initialLat, initialLong);
-			
-			this.mapGridCanvas.planeYcord.bind(Bindings.createDoubleBinding(
-					() -> ((110.54 * (mapGridCanvas.initialLat - viewModel.planeLatCord.get()) 
-							/ Math.sqrt(mapGridCanvas.area)) * mapGridCanvas.recSizeHeight()),viewModel.planeLatCord));
-			this.mapGridCanvas.planeXcord.bind(Bindings.createDoubleBinding(
-					() -> ((111.320 *(viewModel.planeLongCord.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLatCord.get())))
-							/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLongCord));
-			
-			mapGridCanvas.setOnMouseClicked((e) -> {
-				mapGridCanvas.destinationXcord.set(e.getX());
-				mapGridCanvas.destinationYcord.set(e.getY());
-				mapGridCanvas.redraw();
-			});
-
-			// whenever positions change, redraw the map.
-			mapGridCanvas.planeXcord.addListener(new ChangeListener<Object>() {
-				@Override
-				public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-					mapGridCanvas.redraw();
-				}});
-			mapGridCanvas.planeYcord.addListener(new ChangeListener<Object>() {
-				@Override
-				public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-					mapGridCanvas.redraw();
-				}});
-			mapGridCanvas.heading.addListener(new ChangeListener<Object>() {
-				@Override
-				public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-					mapGridCanvas.redraw();
-				}});
 		}
+		mapGridCanvas.setMapData(mapData, area, startLat, startLong);
+		
+		this.mapGridCanvas.planeYcord.bind(Bindings.createDoubleBinding(
+				() -> ((110.54 * (mapGridCanvas.initialLat - viewModel.planeLatCord.get()) 
+						/ Math.sqrt(mapGridCanvas.area)) * mapGridCanvas.recSizeHeight()),viewModel.planeLatCord));
+		this.mapGridCanvas.planeXcord.bind(Bindings.createDoubleBinding(
+				() -> ((111.320 *(viewModel.planeLongCord.get() - mapGridCanvas.initialLong) * Math.cos(Math.toRadians(mapGridCanvas.initialLat - viewModel.planeLatCord.get())))
+						/ Math.sqrt(mapGridCanvas.area) * mapGridCanvas.recSizeWidth()),viewModel.planeLongCord));
+		
+		mapGridCanvas.setOnMouseClicked((e) -> {
+			mapGridCanvas.destinationXcord.set(e.getX());
+			mapGridCanvas.destinationYcord.set(e.getY());
+			
+			recalculateOrRedraw();
+		});
+
+		// listen to flight gear changes
+		mapGridCanvas.heading.addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				mapGridCanvas.redraw();
+			}});
+		mapGridCanvas.planeXcord.addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				recalculateOrRedraw();
+			}});
+		mapGridCanvas.planeYcord.addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				recalculateOrRedraw();
+			}});
 	}
 
 	@FXML
 	public void onCalculatePathButtonClicked() {
 		if (!viewModel.isConnectedToSolver()) {
 			Dialog<Pair<String, String>> dialog = new Dialog<>();
-			dialog.setTitle("Solver Server connection");
-			dialog.setHeaderText("Please insert the ip and port of Solver server");
+			dialog.setTitle("Connect to solver server");
+			dialog.setHeaderText("Please enter the solver server ip and port");
 
-			ButtonType loginButtonType = new ButtonType("Connect and solve", ButtonData.OK_DONE);
+			ButtonType loginButtonType = new ButtonType("Connect", ButtonData.OK_DONE);
 			dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
 			GridPane grid = new GridPane();
@@ -248,6 +246,10 @@ public class MainWindowController implements Initializable, Observer {
 
 			dialog.getDialogPane().setContent(grid);
 			Platform.runLater(() -> ip.requestFocus());
+			
+
+			ip.setText("127.0.0.1");
+			port.setText("9000");
 
 			dialog.setResultConverter(dialogButton -> {
 				if (dialogButton == loginButtonType)
@@ -263,45 +265,80 @@ public class MainWindowController implements Initializable, Observer {
 			if(!result.isPresent()) return;
 		}
 
-		// if already connected.
 		this.mapGridCanvas.startXcord = (int) (mapGridCanvas.planeXcord.get()/mapGridCanvas.recSizeWidth());
 		this.mapGridCanvas.startYcord = (int) (mapGridCanvas.planeYcord.get()/mapGridCanvas.recSizeHeight());
 		
-//		this.mapGridCanvas.startXcord = 50;
-//		this.mapGridCanvas.startYcord = 50;
+		// todo: remove
+		this.mapGridCanvas.startXcord = 50;
+		this.mapGridCanvas.startYcord = 50;
 		
 		int destinationXcord =  (int) (mapGridCanvas.destinationXcord.get() / mapGridCanvas.recSizeWidth());
 		int destinationYcord = (int) (mapGridCanvas.destinationYcord.get()/ mapGridCanvas.recSizeHeight());
 		viewModel.solveProblem(mapGridCanvas.mapData,mapGridCanvas.startXcord, mapGridCanvas.startYcord,destinationXcord, destinationYcord);
 		this.mapGridCanvas.redraw();
 	}
+	
+	private void recalculateOrRedraw() {
+		if (viewModel.isConnectedToSolver()) {
+			int destinationXcord =  (int) (mapGridCanvas.destinationXcord.get() / mapGridCanvas.recSizeWidth());
+			int destinationYcord = (int) (mapGridCanvas.destinationYcord.get()/ mapGridCanvas.recSizeHeight());
+			viewModel.solveProblem(mapGridCanvas.mapData,mapGridCanvas.startXcord, mapGridCanvas.startYcord,destinationXcord, destinationYcord);	
+		}
+		mapGridCanvas.redraw();
+	}
 
+	  //////////////////////
+	 /// center methods ///
+	//////////////////////
+	
 	@FXML
 	public void onExecuteButtonClicked() {
-		if (!autoPilotModeButton.isSelected())
-			return;
-		if (viewModel.interpreterBusy())
-			viewModel.stop();
-		// takes down the current thread and allows another new context of interpretation to run.
+		if (!autoPilotModeButton.isSelected()) {
+			return;			
+		}
+		
+		if (viewModel.interpreterBusy()) {
+			viewModel.stop();			
+		}
+		
 		viewModel.printAreaText.set("");
 		viewModel.interpretText();
 	}
+	
+	  /////////////////////
+	 /// right methods ///
+	/////////////////////
+	
+	public void onRudderSliderChanged() {
+		if (manualModeButton.isSelected() && (mapGridCanvas.serverUp.get()))
+			viewModel.RudderSend();
+	}
 
+	@FXML
+	public void onThrottleSliderChanged() {
+		if (manualModeButton.isSelected() && (mapGridCanvas.serverUp.get()))
+			viewModel.throttleSend();	
+	}
+
+	  ////////////////////////
+	 /// Override methods ///
+	////////////////////////
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		printTextArea.setEditable(false);
 
+		throttleSlider.setShowTickLabels(true);
+		throttleSlider.setMinorTickCount(4);
+		throttleSlider.setShowTickMarks(true);
+		throttleSlider.setSnapToTicks(true);
+		throttleSlider.setMajorTickUnit(0.25f);
+
+		rudderSlider.setMajorTickUnit(0.5f);
 		rudderSlider.setShowTickLabels(true);
 		rudderSlider.setShowTickMarks(true);
-		rudderSlider.setMajorTickUnit(0.5f);
 		rudderSlider.setSnapToTicks(true);
-
-		throttleSlider.setShowTickLabels(true);
-		throttleSlider.setShowTickMarks(true);
-		throttleSlider.setMajorTickUnit(0.25f);
-		throttleSlider.setMinorTickCount(4);
-		throttleSlider.setSnapToTicks(true);
-
+		
 		manualModeButton.setOnAction((e) -> {
 			viewModel.stop();
 		});
@@ -309,17 +346,20 @@ public class MainWindowController implements Initializable, Observer {
 			viewModel.updateInterpreter(true);
 		});
 
-		File planeImageFile = new File("resources/airplane-icon.png");
+		File planeImageFile = new File("assets/airplane-icon.png");
 		Image planeImage = new Image("file:" + planeImageFile.toURI().getPath());
-		File destinationImageFile = new File("resources/destination-icon.png");
+		File destinationImageFile = new File("assets/destination-icon.png");
 		Image destinationImage = new Image("file:" + destinationImageFile.toURI().getPath());
-		File arrowImageFile = new File("resources/arrow-icon.png");
+		File arrowImageFile = new File("assets/arrow-icon.png");
 		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
+		
 		mapGridCanvas.setImages(planeImage, destinationImage, arrowImage);
 		printTextArea.setEditable(false);
+		
 		ToggleGroup buttonGroup = new ToggleGroup();
 		autoPilotModeButton.setToggleGroup(buttonGroup);
 		manualModeButton.setToggleGroup(buttonGroup);
+		
 		joyStickCanvas.setMouseEventHandlers();
 	}
 
