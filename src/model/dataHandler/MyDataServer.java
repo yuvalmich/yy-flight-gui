@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
-import model.Model;
+import model.MainWindowModel;
 
 public class MyDataServer implements DataServer {
 
@@ -91,7 +91,7 @@ public class MyDataServer implements DataServer {
 				// makes sure that the main thread waits for the server to boot-up and function.
 				// causes the main thread to wake up.
 				DataSynchronizer.resume(lock);
-				Model m = Model.getInstance();
+				MainWindowModel m = MainWindowModel.getInstance();
 				m.notifyDataServerAvailable();
 				while (open) {
 					this.data_recieve(inputFromClient, freq);

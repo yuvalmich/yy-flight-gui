@@ -2,13 +2,13 @@ package model.interpreter.commands;
 
 import java.util.List;
 
-import model.Model;
+import model.MainWindowModel;
 import model.interpreter.expressions.ExpressionCalculate;
 
 
 public class PrintCommand implements Command {
 	//with spaces.
-	Model m=Model.getInstance();
+	MainWindowModel m=MainWindowModel.getInstance();
 	@Override
 	public int getArguments(String[] tokens, int idx, List<Object> emptyList) {
 		return StringToArgumentParser.parse(tokens, idx, 1, emptyList, "String");

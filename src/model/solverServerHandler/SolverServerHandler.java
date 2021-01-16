@@ -7,11 +7,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import model.Model;
+import model.MainWindowModel;
 
 public class SolverServerHandler {
 	public static Socket connection;
-	Model m=Model.getInstance();
+	MainWindowModel m=MainWindowModel.getInstance();
 
 	public void connect(String ip, int port) {
 		try {

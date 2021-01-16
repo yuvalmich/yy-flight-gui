@@ -13,17 +13,17 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import model.Model;
+import model.MainWindowModel;
 
-public class ViewModel extends Observable implements Observer {
+public class MainWindowViewModel extends Observable implements Observer {
 	public StringProperty commandLineText, printAreaText,solution; // these are observable values
 	public DoubleProperty throttleVal, rudderVal, planeLatCord, planeLongCord, aileronVal, elevatorVal;
 	public DoubleProperty heading;
 	volatile boolean dataServAvailable;
 	public BooleanProperty serverUp;
-	Model model;
+	MainWindowModel model;
 
-	public ViewModel(Model model) {
+	public MainWindowViewModel(MainWindowModel model) {
 		this.model = model;
 		commandLineText = new SimpleStringProperty();
 		printAreaText = new SimpleStringProperty();

@@ -7,22 +7,22 @@ import model.interpreter.MyInterpreter;
 import model.solverServerHandler.SolverServerHandler;
 
 
-public class Model extends Observable {
+public class MainWindowModel extends Observable {
 
 	public MyInterpreter interpreter;
 	public FlightGearServerHandler fliGearServerHandler;
 	public SolverServerHandler solvServerHandler;
 	private static class ModelHolder {
-		public static final Model model = new Model();
+		public static final MainWindowModel model = new MainWindowModel();
 	}
 	
-	private Model() {
+	private MainWindowModel() {
 		this.interpreter = new MyInterpreter();
 		this.fliGearServerHandler = new FlightGearServerHandler();
 		this.solvServerHandler=new SolverServerHandler();
 	}
 
-	public static Model getInstance() {
+	public static MainWindowModel getInstance() {
 		return ModelHolder.model;
 	}
 	
@@ -40,7 +40,7 @@ public class Model extends Observable {
 	
 	public void printOutput(String output)
 	{
-		String data="print "+output;
+		String data="print " + output;
 		setChanged();
 		notifyObservers(data);
 	}
