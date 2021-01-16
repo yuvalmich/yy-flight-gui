@@ -147,21 +147,6 @@ public class MainWindowController implements Initializable, Observer {
 			viewModel.connectToSimulator(serverInfo.getKey(), Integer.parseInt(serverInfo.getValue()));
 		});
 	}
-	//this method not used but can be use to rescale the size of the grid to have less rectangles
-	public int[][] RescaleMapData(int[][] mapData, int scaleDiv) {
-		int[][] scaledmapData = new int[mapData.length / scaleDiv][mapData[0].length / scaleDiv];
-		for (int i = 0; i < mapData.length; i += scaleDiv) {
-			for (int j = 0; j < mapData[0].length; j += scaleDiv) {
-				for (int k = 0; k < scaleDiv; k++) {
-					for (int l = 0; l < scaleDiv; l++) {
-						scaledmapData[i / scaleDiv][j / scaleDiv] += mapData[i + k][j + l];
-					}
-				}
-				scaledmapData[i / scaleDiv][j / scaleDiv] /= (scaleDiv * scaleDiv);
-			}
-		}
-		return scaledmapData;
-	}
 
 	@FXML
 	public void LoadDataPressed() {
@@ -342,7 +327,6 @@ public class MainWindowController implements Initializable, Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
-
+		// Note: this function has no implementation because of data bindings.
 	}
 }
