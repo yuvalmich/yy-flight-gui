@@ -4,7 +4,7 @@ import java.util.Observable;
 
 import model.flightGearConnector.FlightGearConnector;
 import model.interpreter.MyInterpreter;
-import model.solverServerHandler.SolverServerHandler;
+import model.solverConnector.SolverServerHandler;
 
 
 public class MainWindowModel extends Observable {
@@ -81,7 +81,7 @@ public class MainWindowModel extends Observable {
 	}
 	
 	public boolean isConnectedToSolver() {
-		return  (SolverServerHandler.connection!=null);
+		return  (SolverServerHandler.socketConnection!=null);
 	}
 	
 	public void solveProblem(int[][] mapGrid, int currentX, int currentY, int xDest, int yDest) {
