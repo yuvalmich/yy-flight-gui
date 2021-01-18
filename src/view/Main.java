@@ -31,8 +31,7 @@ public class Main extends Application {
 			MainWindowController v = fxl.getController();
 			
 			
-			File windowBackgroundFile = new File("assets/background.png");
-			Image windowBackground = new Image("file:" + windowBackgroundFile.toURI().getPath(),  1400, 550, false,true);
+			Image windowBackground = new Image(getClass().getResourceAsStream("background.png"),  1400, 550, false,true);
 			BackgroundImage myBI = new BackgroundImage(windowBackground,
 			        BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
 			          BackgroundSize.DEFAULT);

@@ -5,6 +5,8 @@ import java.io.File;
 import javafx.scene.control.*;
 import javafx.beans.value.ChangeListener;
 import java.net.URL;
+import java.nio.file.Paths;
+
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -131,7 +133,7 @@ public class MainWindowController implements Initializable, Observer {
 	public void onLoadDataButtonClicked() {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("load map");
-		fc.setInitialDirectory(new File("./assets/maps"));
+		fc.setInitialDirectory(new File(Paths.get(".").toAbsolutePath().normalize().toString() + "/maps"));
 		
 		File chosen = fc.showOpenDialog(null);
 		
@@ -307,7 +309,7 @@ public class MainWindowController implements Initializable, Observer {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		throttleSlider.setShowTickLabels(true);
-		throttleSlider.setMinorTickCount(4);
+		throttleSlider.setMinorTickCount(4);	
 		throttleSlider.setShowTickMarks(true);
 		throttleSlider.setSnapToTicks(true);
 		throttleSlider.setMajorTickUnit(0.25f);
@@ -324,12 +326,9 @@ public class MainWindowController implements Initializable, Observer {
 			viewModel.updateInterpreter(true);
 		});
 
-		File planeImageFile = new File("assets/airplane.png");
-		Image planeImage = new Image("file:" + planeImageFile.toURI().getPath());
-		File destinationImageFile = new File("assets/dest-icon.png");
-		Image destinationImage = new Image("file:" + destinationImageFile.toURI().getPath());
-		File arrowImageFile = new File("assets/arrow.png");
-		Image arrowImage = new Image("file:" + arrowImageFile.toURI().getPath());
+		Image planeImage = new Image(getClass().getResourceAsStream("airplane.png"));
+		Image destinationImage = new Image(getClass().getResourceAsStream("dest-icon.png"));
+		Image arrowImage = new Image(getClass().getResourceAsStream("arrow.png"));
 		
 		mapGridCanvas.initIcons(planeImage, destinationImage, arrowImage);
  		
