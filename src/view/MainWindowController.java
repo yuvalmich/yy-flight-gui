@@ -198,12 +198,12 @@ public class MainWindowController implements Initializable, Observer {
 		mapGridCanvas.airplane_X.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				recalculateOrRedraw();
+				mapGridCanvas.redraw();
 			}});
 		mapGridCanvas.airplane_Y.addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				recalculateOrRedraw();
+				mapGridCanvas.redraw();
 			}});
 	}
 
